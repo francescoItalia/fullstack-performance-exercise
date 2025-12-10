@@ -1,0 +1,113 @@
+{
+  "compilerOptions": {
+    /* ──────────────────────────────
+     * Module & Runtime Configuration
+     * ────────────────────────────── */
+
+    "module": "esnext",
+    // Emit native ES modules. Needed for `import/export` in Node 18+ and Vite.
+
+    "target": "es2022",
+    // Compile for modern JS runtime (async, top-level await, better performance).
+    // Node + modern browsers understand this natively → fewer polyfills.
+
+    "moduleResolution": "node",
+    // TypeScript resolves imports exactly like Node:
+    // - auto-detect .ts/.js/.d.ts
+    // - search node_modules
+    // - supports package.json "exports"/"types"
+    // Critical for monorepos + Express + shared modules.
+
+    "moduleDetection": "force",
+    // Treat every .ts file as a module. Prevents accidental script-scope globals.
+    // Required when using ESM without explicit `"type": "module"` inheritance.
+
+    "esModuleInterop": true,
+    // Allows default import of CommonJS modules:
+    //     import express from "express"
+    // Without this, you'd need:
+    //     import * as express from "express";
+    // Improves ergonomics + compatibility with JS ecosystem.
+
+    "allowSyntheticDefaultImports": true,
+    // Suppresses type errors for CommonJS default imports.
+    // Ensures `.d.ts` that use `export =` work with `import x from`.
+
+    "resolveJsonModule": true,
+    // Allows:
+    //     import data from "./data.json"
+    // Very useful for mock datasets and config files.
+
+    "verbatimModuleSyntax": false,
+    // Allow TS to transform module syntax when necessary (better compatibility).
+    // If true → TS refuses imports that don’t strictly match runtime format.
+
+
+    /* ──────────────────────────────
+     * Emit / Build Behavior
+     * ────────────────────────────── */
+
+    "sourceMap": true,
+    // Generate `.map` files → debugging TypeScript directly in browser/devtools.
+
+    "declaration": true,
+    // Emit `.d.ts` files so other packages can consume our types.
+    // Important in monorepo if we ever share code between server & client.
+
+    "declarationMap": true,
+    // Add source mapping info for `.d.ts` → easier debugging in shared libraries.
+
+    "noEmit": true,
+    // Do NOT emit compiled `.js` here — bundlers (Vite) handle builds.
+    // If we ever build server independently → set to false in server/ only.
+
+
+    /* ──────────────────────────────
+     * Type Safety / Strictness
+     * ────────────────────────────── */
+
+    "strict": true,
+    // Enables the full suite of strict type checking.
+    // Best practice for production and interview setups.
+
+    "exactOptionalPropertyTypes": true,
+    // Optional properties behave EXACTLY:
+    //   `{ foo?: string }` → foo can only be missing OR string
+    // Prevents accidental `foo: undefined` bugs.
+
+    "noUncheckedIndexedAccess": true,
+    // Index access becomes safe by default:
+    //   arr[i] has type T | undefined
+    // Eliminates MANY runtime crashes caused by "undefined access".
+
+    "noUncheckedSideEffectImports": true,
+    // Warn if an import is only for side effects:
+    //   import "./init"
+    // Helps catch unused code + unintended global execution.
+
+    "isolatedModules": true,
+    // Each file must be independently transpile-able.
+    // Required for Vite, SWC, and future server bundling.
+
+
+    /* ──────────────────────────────
+     * Build Stability / Platform Support
+     * ────────────────────────────── */
+
+    "skipLibCheck": true,
+    // Don’t type check node_modules — faster builds and fewer irrelevant errors.
+    // Critical for Express, Socket.IO, etc., which have noisy `.d.ts` files.
+
+    "forceConsistentCasingInFileNames": true,
+    // Prevents case-mismatch filesystem bugs:
+    // Windows vs macOS vs Linux would otherwise disagree.
+
+    /* ──────────────────────────────
+     * Type Environments
+     * ────────────────────────────── */
+
+    "types": []
+    // No global types injected automatically.
+    // Forces explicit and clean type imports per package.
+  }
+}
