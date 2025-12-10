@@ -1,0 +1,11 @@
+{
+  "name": "fullstack-performance-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@types/express": "~5.0.1",
+  }
+}

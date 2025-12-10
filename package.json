@@ -1,0 +1,19 @@
+{
+  "name": "fullstack-performance-exercise",
+  "version": "1.0.0",
+  "repository": "",
+  "author": "",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "lerna run dev --parallel",
+    "start": "lerna run start"
+  },
+  "devDependencies": {
+    "lerna": "~8.2.1"
+  }
+}
