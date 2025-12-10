@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@faker-js/faker": "^10.1.0",
     "express": "~5.1.0",
     "shared": "1.0.0"
   },
