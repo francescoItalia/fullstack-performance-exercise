@@ -7,10 +7,12 @@
   "private": true,
   "workspaces": [
     "client",
-    "server"
+    "server",
+    "shared"
   ],
   "scripts": {
-    "dev": "lerna run dev --parallel",
+    "build:shared": "yarn workspace shared build",
+    "dev": "yarn build:shared && lerna run dev --parallel",
     "start": "lerna run start"
   },
   "devDependencies": {

@@ -13,6 +13,9 @@ dist/
 build/
 scripts/
 
+# TypeScript build info (incremental compilation cache)
+*.tsbuildinfo
+
 # misc
 .DS_Store
 .env

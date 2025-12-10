@@ -109,5 +109,29 @@
     "types": []
     // No global types injected automatically.
     // Forces explicit and clean type imports per package.
-  }
+  },
+
+  /* ──────────────────────────────
+   * Project References (Monorepo)
+   * ──────────────────────────────
+   *
+   * Why use references?
+   *
+   *   Without references           →  With references
+   *   ─────────────────────────────────────────────────────────────
+   *   TS compiles whole monorepo   →  TS compiles only changed workspace
+   *   Slower dev + CI              →  Faster incremental builds
+   *   No type caching              →  Supports .tsbuildinfo caching
+   *   No dependency ordering       →  Guarantees build order (shared → server → client)
+   *   No TS awareness of links     →  TS understands workspace dependencies
+   *
+   * "files": [] tells TS this root config doesn't compile anything itself —
+   * it just orchestrates the sub-projects.
+   */
+  "files": [],
+  "references": [
+    { "path": "./shared" },
+    { "path": "./server" },
+    { "path": "./client" }
+  ]
 }
