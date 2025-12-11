@@ -1,0 +1,1 @@
+export { PageWithSidebarTemplate } from "./PageWithSidebarTemplate";
