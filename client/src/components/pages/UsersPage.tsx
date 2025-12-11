@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useUsersQuery } from "../../api/users";
+
 import { SearchBox } from "../molecules";
 import { UserListVirtual, UserFiltersSidebar } from "../organisms";
 import { PageWithSidebarTemplate } from "../templates";
+import { useDebouncedValue } from "../../hooks";
 
 export function UsersPage() {
   const [search, setSearch] = useState("");
@@ -10,6 +12,9 @@ export function UsersPage() {
   const [selectedNationalities, setSelectedNationalities] = useState<string[]>(
     []
   );
+
+  // Debounce search to avoid excessive API calls
+  const debouncedSearch = useDebouncedValue(search);
 
   const {
     data: users = [],
@@ -19,7 +24,7 @@ export function UsersPage() {
     fetchNextPage,
   } = useUsersQuery({
     params: {
-      search: search || undefined,
+      search: debouncedSearch || undefined,
       hobbies: selectedHobbies.length > 0 ? selectedHobbies : undefined,
       nationalities:
         selectedNationalities.length > 0 ? selectedNationalities : undefined,

@@ -25,7 +25,6 @@ export function UserListVirtual({
     count: users.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => ROW_HEIGHT,
-    overscan: 5,
   });
 
   const virtualItems = virtualizer.getVirtualItems();
