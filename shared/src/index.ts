@@ -1,2 +1,12 @@
-export * from "./types/user.js";
-export * from "./types/api.js";
+// Entities
+export type { User } from "./entities/user.js";
+
+// API - Users
+export type { GetUsersParams } from "./api/users/params.js";
+export type {
+  GetUsersResponse,
+  GetUsersMetadataResponse,
+} from "./api/users/responses.js";
+
+// Common
+export type { PaginatedResponse } from "./common/pagination.js";
