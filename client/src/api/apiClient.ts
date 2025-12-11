@@ -3,7 +3,11 @@
  * Centralized fetch wrapper with base URL and error handling.
  */
 
-const API_BASE_URL = "http://localhost:3000/api";
+/**
+ * DEV: Uses relative URL — Vite proxy forwards to backend (see vite.config.ts)
+ * PROD: Update to actual API URL or use env variable
+ */
+const API_BASE_URL = "/api";
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE";
