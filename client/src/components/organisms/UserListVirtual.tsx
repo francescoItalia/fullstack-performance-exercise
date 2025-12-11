@@ -29,6 +29,14 @@ export function UserListVirtual({
 
   const virtualItems = virtualizer.getVirtualItems();
 
+  // When filters change, the query resets to page 1 and users.length shrinks.
+  // Reset the pagination guard so infinite scroll can trigger again.
+  useEffect(() => {
+    if (users.length < loadTriggeredForCount.current) {
+      loadTriggeredForCount.current = 0;
+    }
+  }, [users.length]);
+
   useEffect(() => {
     if (!virtualItems.length || !hasMore || isLoading || !onLoadMore) return;
     if (loadTriggeredForCount.current >= users.length) return;
