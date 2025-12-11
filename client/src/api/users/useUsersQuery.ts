@@ -29,6 +29,10 @@ export function useUsersQuery<TData = User[]>(
     select:
       select ??
       (defaultSelectUsers as (data: { pages: GetUsersResponse[] }) => TData),
+    // Keep data fresh for 5 minutes. Without this, returning to a previously
+    // paginated query (e.g., after removing filters) refetches ALL cached pages,
+    // causing a burst of API calls. With staleTime, cached data is reused directly.
+    staleTime: 5 * 60 * 1000,
   });
 
   return {
