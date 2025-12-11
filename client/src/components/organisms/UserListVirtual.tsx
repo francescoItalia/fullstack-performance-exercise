@@ -22,7 +22,7 @@ export function UserListVirtual({
   return (
     <div className="space-y-4">
       {/* Grid: 1 col mobile, 2 sm, 3 md, 4 lg+ */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {users.map((user) => (
           <UserCard key={user.id} user={user} />
         ))}
@@ -47,4 +47,3 @@ export function UserListVirtual({
     </div>
   );
 }
-

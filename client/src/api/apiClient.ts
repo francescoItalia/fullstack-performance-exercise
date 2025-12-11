@@ -21,19 +21,22 @@ export async function apiClient<T>(
 ): Promise<T> {
   const { method = "GET", body, params } = options;
 
-  // Build URL with query params
-  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  // Build query string
+  const searchParams = new URLSearchParams();
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined) {
         if (Array.isArray(value)) {
-          url.searchParams.set(key, value.join(","));
+          searchParams.set(key, value.join(","));
         } else {
-          url.searchParams.set(key, String(value));
+          searchParams.set(key, String(value));
         }
       }
     });
   }
+
+  const queryString = searchParams.toString();
+  const url = `${API_BASE_URL}${endpoint}${queryString ? `?${queryString}` : ""}`;
 
   const fetchOptions: RequestInit = {
     method,
@@ -46,7 +49,7 @@ export async function apiClient<T>(
     fetchOptions.body = JSON.stringify(body);
   }
 
-  const response = await fetch(url.toString(), fetchOptions);
+  const response = await fetch(url, fetchOptions);
 
   if (!response.ok) {
     throw new Error(`API error: ${response.status} ${response.statusText}`);

@@ -1,59 +1,8 @@
 import { useState } from "react";
-import type { User } from "shared";
+import { useUsersQuery } from "../../api/users";
 import { SearchBox } from "../molecules";
-import { UserListVirtual, FilterSidebar } from "../organisms";
+import { UserListVirtual, UserFiltersSidebar } from "../organisms";
 import { PageWithSidebarTemplate } from "../templates";
-
-// Mock data for scaffolding — will be replaced with API calls
-const MOCK_USERS: User[] = [
-  {
-    id: "1",
-    avatar: "https://i.pravatar.cc/150?u=1",
-    first_name: "John",
-    last_name: "Doe",
-    age: 28,
-    nationality: "United States",
-    hobbies: ["coding", "gaming", "reading"],
-  },
-  {
-    id: "2",
-    avatar: "https://i.pravatar.cc/150?u=2",
-    first_name: "Jane",
-    last_name: "Smith",
-    age: 34,
-    nationality: "Canada",
-    hobbies: ["music", "travel"],
-  },
-  {
-    id: "3",
-    avatar: "https://i.pravatar.cc/150?u=3",
-    first_name: "Carlos",
-    last_name: "Garcia",
-    age: 42,
-    nationality: "Spain",
-    hobbies: ["sports", "cooking", "photography", "hiking"],
-  },
-];
-
-const MOCK_HOBBIES = [
-  "coding",
-  "gaming",
-  "reading",
-  "music",
-  "travel",
-  "sports",
-  "cooking",
-  "photography",
-  "hiking",
-];
-
-const MOCK_NATIONALITIES = [
-  "United States",
-  "Canada",
-  "Spain",
-  "Germany",
-  "France",
-];
 
 export function UsersPage() {
   const [search, setSearch] = useState("");
@@ -62,10 +11,20 @@ export function UsersPage() {
     []
   );
 
-  // TODO: Replace with actual API integration
-  const users = MOCK_USERS;
-  const hobbies = MOCK_HOBBIES;
-  const nationalities = MOCK_NATIONALITIES;
+  const {
+    data: users = [],
+    isLoading,
+    isFetchingNextPage,
+    hasMore,
+    fetchNextPage,
+  } = useUsersQuery({
+    params: {
+      search: search || undefined,
+      hobbies: selectedHobbies.length > 0 ? selectedHobbies : undefined,
+      nationalities:
+        selectedNationalities.length > 0 ? selectedNationalities : undefined,
+    },
+  });
 
   return (
     <PageWithSidebarTemplate
@@ -79,9 +38,7 @@ export function UsersPage() {
         </div>
       }
       sidebar={
-        <FilterSidebar
-          hobbies={hobbies}
-          nationalities={nationalities}
+        <UserFiltersSidebar
           selectedHobbies={selectedHobbies}
           selectedNationalities={selectedNationalities}
           onHobbiesChange={setSelectedHobbies}
@@ -89,7 +46,12 @@ export function UsersPage() {
         />
       }
       content={
-        <UserListVirtual users={users} hasMore={false} isLoading={false} />
+        <UserListVirtual
+          users={users}
+          hasMore={hasMore}
+          isLoading={isLoading || isFetchingNextPage}
+          onLoadMore={fetchNextPage}
+        />
       }
     />
   );
