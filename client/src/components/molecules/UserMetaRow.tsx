@@ -8,10 +8,19 @@ type UserMetaRowProps = {
 export function UserMetaRow({ nationality, age }: UserMetaRowProps) {
   return (
     <div className="flex items-center gap-2">
-      <Text variant="caption">{nationality}</Text>
+      <Text
+        variant="caption"
+        className="whitespace-nowrap overflow-hidden text-ellipsis"
+      >
+        {nationality}
+      </Text>
       <span className="text-gray-300">•</span>
-      <Text variant="caption">{age} years old</Text>
+      <Text
+        variant="caption"
+        className="whitespace-nowrap overflow-hidden text-ellipsis"
+      >
+        {age} yrs old
+      </Text>
     </div>
   );
 }
-
