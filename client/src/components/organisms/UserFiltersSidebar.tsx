@@ -32,8 +32,8 @@ export function UserFiltersSidebar({
       <aside className="w-full lg:w-96 p-4 bg-gray-50 rounded-lg">
         <div className="animate-pulse space-y-4">
           <div className="h-4 bg-gray-200 rounded w-1/3" />
-          <div className="h-32 bg-gray-200 rounded" />
-          <div className="h-32 bg-gray-200 rounded" />
+          <div className="h-80 bg-gray-200 rounded" />
+          <div className="h-80 bg-gray-200 rounded" />
         </div>
       </aside>
     );
@@ -43,7 +43,7 @@ export function UserFiltersSidebar({
     <aside className="w-full lg:w-96 p-4 bg-gray-50 rounded-lg space-y-6">
       {/* Header with Clear all */}
       <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold text-gray-800">Filters</span>
+        <h2 className="text-lg font-semibold text-gray-800">Filters</h2>
         {hasFilters && (
           <button
             onClick={clearAll}
@@ -66,6 +66,7 @@ export function UserFiltersSidebar({
         options={nationalities}
         selected={selectedNationalities}
         onChange={onNationalitiesChange}
+        direction="column"
       />
     </aside>
   );

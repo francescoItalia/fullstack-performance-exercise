@@ -1,10 +1,9 @@
-import { Checkbox, Text, Tag } from "../atoms";
-
 type FilterSectionProps = {
   title: string;
   options: string[];
   selected: string[];
   onChange: (selected: string[]) => void;
+  direction?: "row" | "column";
 };
 
 export function FilterSection({
@@ -12,6 +11,7 @@ export function FilterSection({
   options,
   selected,
   onChange,
+  direction = "row",
 }: FilterSectionProps) {
   const handleToggle = (option: string) => {
     if (selected.includes(option)) {
@@ -21,66 +21,42 @@ export function FilterSection({
     }
   };
 
-  const handleRemove = (option: string) => {
-    onChange(selected.filter((s) => s !== option));
-  };
+  // Sort options alphabetically
+  const sortedOptions = [...options].sort((a, b) => a.localeCompare(b));
 
   return (
     <div className="space-y-3">
-      <Text variant="heading" className="text-sm">
-        {title}
-      </Text>
+      <h3 className="text-sm font-semibold text-gray-800">{title}</h3>
 
-      {/* Desktop: 2-column grid (checkboxes | selected tags) */}
-      <div className="hidden lg:grid lg:grid-cols-2 lg:gap-4">
-        {/* Checkboxes column */}
-        <div className="space-y-2">
-          {options.map((option) => (
-            <Checkbox
+      <div
+        className={`flex flex-wrap gap-2 ${
+          direction === "column" ? "lg:flex-col lg:items-start" : ""
+        }`}
+      >
+        {sortedOptions.map((option) => {
+          const isSelected = selected.includes(option);
+
+          return (
+            <button
               key={option}
-              label={option}
-              checked={selected.includes(option)}
-              onChange={() => handleToggle(option)}
-            />
-          ))}
-        </div>
-
-        {/* Selected tags column */}
-        <div className="flex flex-wrap gap-1 content-start min-h-[2.5rem]">
-          {selected.map((item) => (
-            <Tag key={item} onRemove={() => handleRemove(item)}>
-              {item}
-            </Tag>
-          ))}
-        </div>
-      </div>
-
-      {/* Mobile/Tablet: horizontal scroll + tags below */}
-      <div className="lg:hidden space-y-3">
-        {/* Horizontal scrollable checkboxes */}
-        <div
-          className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {options.map((option) => (
-            <div key={option} className="flex-shrink-0">
-              <Checkbox
-                label={option}
-                checked={selected.includes(option)}
-                onChange={() => handleToggle(option)}
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Selected tags below with reserved space */}
-        <div className="flex flex-wrap gap-1 min-h-[2.5rem]">
-          {selected.map((item) => (
-            <Tag key={item} onRemove={() => handleRemove(item)}>
-              {item}
-            </Tag>
-          ))}
-        </div>
+              onClick={() => handleToggle(option)}
+              className={`
+                inline-flex items-center gap-1 px-2 py-1 rounded-md text-sm
+                transition-colors cursor-pointer
+                ${
+                  isSelected
+                    ? "bg-indigo-50 text-indigo-700"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }
+              `}
+            >
+              {option}
+              {isSelected && (
+                <span className="text-indigo-400 hover:text-indigo-700">×</span>
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
