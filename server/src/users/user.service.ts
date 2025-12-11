@@ -1,4 +1,8 @@
-import type { User, GetUsersParams, GetUsersResponse } from "shared";
+import type {
+  GetUsersParams,
+  GetUsersResponse,
+  GetUsersMetadataResponse,
+} from "shared";
 import * as userDb from "./user.db.js";
 
 /**
@@ -22,4 +26,8 @@ export function getUsers(params: GetUsersParams): GetUsersResponse {
     total,
     hasMore,
   };
+}
+
+export function getMetadata(): GetUsersMetadataResponse {
+  return userDb.getMetadata();
 }

@@ -1,12 +1,10 @@
-import { User } from "./user.js";
+import type { User } from "./user.js";
 
 export type GetUsersParams = {
   page?: number | undefined;
   limit?: number | undefined;
   search?: string | undefined;
-  nationality?: string | undefined;
-  hobbies?: string[] | undefined;
-};
+} & Partial<Metadata>;
 
 export type PaginatedResponse<T> = {
   items: T[];
@@ -17,3 +15,10 @@ export type PaginatedResponse<T> = {
 };
 
 export type GetUsersResponse = PaginatedResponse<User>;
+
+export type Metadata = {
+  hobbies: string[] | undefined;
+  nationalities: string[] | undefined;
+};
+
+export type GetUsersMetadataResponse = Metadata;
