@@ -1,5 +1,4 @@
 import { FilterSection } from "../molecules";
-import { Tag } from "../atoms";
 
 type FilterSidebarProps = {
   hobbies: string[];
@@ -27,46 +26,19 @@ export function FilterSidebar({
   };
 
   return (
-    <aside className="w-64 p-4 bg-gray-50 rounded-lg space-y-6">
-      {hasFilters && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">
-              Active Filters
-            </span>
-            <button
-              onClick={clearAll}
-              className="text-xs text-indigo-600 hover:text-indigo-700"
-            >
-              Clear all
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-1">
-            {selectedHobbies.map((hobby) => (
-              <Tag
-                key={hobby}
-                onRemove={() =>
-                  onHobbiesChange(selectedHobbies.filter((h) => h !== hobby))
-                }
-              >
-                {hobby}
-              </Tag>
-            ))}
-            {selectedNationalities.map((nat) => (
-              <Tag
-                key={nat}
-                onRemove={() =>
-                  onNationalitiesChange(
-                    selectedNationalities.filter((n) => n !== nat)
-                  )
-                }
-              >
-                {nat}
-              </Tag>
-            ))}
-          </div>
-        </div>
-      )}
+    <aside className="w-full lg:w-96 p-4 bg-gray-50 rounded-lg space-y-6">
+      {/* Header with Clear all */}
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-semibold text-gray-800">Filters</span>
+        {hasFilters && (
+          <button
+            onClick={clearAll}
+            className="text-xs text-indigo-600 hover:text-indigo-700"
+          >
+            Clear all
+          </button>
+        )}
+      </div>
 
       <FilterSection
         title="Hobbies"

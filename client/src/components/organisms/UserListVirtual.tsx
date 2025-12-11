@@ -21,9 +21,12 @@ export function UserListVirtual({
 }: UserListVirtualProps) {
   return (
     <div className="space-y-4">
-      {users.map((user) => (
-        <UserCard key={user.id} user={user} />
-      ))}
+      {/* Grid: 1 col mobile, 2 sm, 3 md, 4 lg+ */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {users.map((user) => (
+          <UserCard key={user.id} user={user} />
+        ))}
+      </div>
 
       {isLoading && (
         <div className="text-center py-4 text-gray-500">Loading...</div>
