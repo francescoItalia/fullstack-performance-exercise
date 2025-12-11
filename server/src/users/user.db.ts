@@ -99,7 +99,7 @@ export function findUsers(params: GetUsersParams): FindUsersResult {
 
   if (hobbies && hobbies.length > 0) {
     filtered = filtered.filter((user) =>
-      hobbies.every((hobby) =>
+      hobbies.some((hobby) =>
         user.hobbies.map((h) => h.toLowerCase()).includes(hobby.toLowerCase())
       )
     );
