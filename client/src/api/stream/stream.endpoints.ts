@@ -103,3 +103,91 @@ export async function* streamNDJSON(): AsyncGenerator<
     reader.releaseLock();
   }
 }
+
+// ============================================================
+// SSE STREAMING (Server-Sent Events)
+// ============================================================
+
+/**
+ * SSE event callback type for typed event handling
+ */
+export type SSEEventCallback = (event: ChatStreamEvent) => void;
+
+/**
+ * Creates an SSE connection and returns control functions.
+ * This is the same protocol ChatGPT uses for streaming responses.
+ *
+ * SSE uses the browser's native EventSource API which provides:
+ * - Automatic reconnection on connection loss
+ * - Built-in event type handling via addEventListener
+ * - Standard text/event-stream protocol
+ *
+ * Format from server:
+ *   event: message_start
+ *   data: {"message_id":"msg_abc","model":"mock-gpt-1"}
+ *
+ *   event: delta
+ *   data: {"delta":{"content":"Hello"},"index":0}
+ *
+ *   event: message_complete
+ *   data: {"finish_reason":"stop","usage":{"total_tokens":42}}
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/EventSource
+ */
+export function createSSEStream(
+  onEvent: SSEEventCallback,
+  onError: (error: Error) => void,
+  onComplete: () => void
+): { close: () => void } {
+  const eventSource = new EventSource(`${API_BASE_URL}/stream/sse`);
+
+  // Handle message_start event
+  eventSource.addEventListener("message_start", (e) => {
+    try {
+      const payload = JSON.parse(e.data);
+      onEvent({ type: "message_start", ...payload });
+    } catch {
+      console.warn("Failed to parse message_start:", e.data);
+    }
+  });
+
+  // Handle delta events (content chunks)
+  eventSource.addEventListener("delta", (e) => {
+    try {
+      const payload = JSON.parse(e.data);
+      onEvent({ type: "delta", ...payload });
+    } catch {
+      console.warn("Failed to parse delta:", e.data);
+    }
+  });
+
+  // Handle message_complete event
+  eventSource.addEventListener("message_complete", (e) => {
+    try {
+      const payload = JSON.parse(e.data);
+      onEvent({ type: "message_complete", ...payload });
+    } catch {
+      console.warn("Failed to parse message_complete:", e.data);
+    }
+  });
+
+  // Handle generic message (for [DONE] marker)
+  eventSource.onmessage = (e) => {
+    if (e.data === "[DONE]") {
+      eventSource.close();
+      onComplete();
+    }
+  };
+
+  // Handle errors
+  eventSource.onerror = () => {
+    eventSource.close();
+    onError(new Error("SSE connection failed"));
+  };
+
+  return {
+    close: () => {
+      eventSource.close();
+    },
+  };
+}

@@ -1,5 +1,5 @@
 import { Header } from "../templates";
-import { RawStreamDemo, NDJSONStreamDemo } from "../organisms";
+import { RawStreamDemo, NDJSONStreamDemo, SSEStreamDemo } from "../organisms";
 
 /**
  * Streams demo page showcasing different HTTP streaming strategies.
@@ -42,16 +42,8 @@ export function StreamsPage() {
           {/* NDJSON Streaming Demo */}
           <NDJSONStreamDemo />
 
-          {/* Placeholder for SSE Demo */}
-          <div className="bg-white rounded-xl border border-dashed border-gray-300 p-8 flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
-                <span className="text-gray-400 text-xl">3</span>
-              </div>
-              <h3 className="font-medium text-gray-700">Server-Sent Events</h3>
-              <p className="text-sm text-gray-500 mt-1">Coming soon...</p>
-            </div>
-          </div>
+          {/* SSE Streaming Demo (ChatGPT-style) */}
+          <SSEStreamDemo />
         </div>
 
         {/* Info section */}

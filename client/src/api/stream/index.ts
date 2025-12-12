@@ -1,9 +1,10 @@
 // Endpoints
-export { streamRawText, streamNDJSON } from "./stream.endpoints";
+export { streamRawText, streamNDJSON, createSSEStream } from "./stream.endpoints";
 
 // Hooks
 export { useStreamRaw } from "./useStreamRaw";
 export { useStreamNDJSON } from "./useStreamNDJSON";
+export { useStreamSSE } from "./useStreamSSE";
 
 // Re-export types from shared for convenience
 export type {
