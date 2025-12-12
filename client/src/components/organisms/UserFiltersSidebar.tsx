@@ -1,7 +1,9 @@
 import { useUsersMetadata } from "../../api/users";
-import { FilterSection } from "../molecules";
+import { FilterSection, SearchBox } from "../molecules";
 
 type UserFiltersSidebarProps = {
+  search: string;
+  onSearchChange: (value: string) => void;
   selectedHobbies: string[];
   selectedNationalities: string[];
   onHobbiesChange: (hobbies: string[]) => void;
@@ -9,6 +11,8 @@ type UserFiltersSidebarProps = {
 };
 
 export function UserFiltersSidebar({
+  search,
+  onSearchChange,
   selectedHobbies,
   selectedNationalities,
   onHobbiesChange,
@@ -41,6 +45,13 @@ export function UserFiltersSidebar({
 
   return (
     <aside className="w-full lg:w-96 p-4 bg-gray-50 rounded-lg space-y-6">
+      {/* Search */}
+      <SearchBox
+        value={search}
+        onChange={onSearchChange}
+        placeholder="Search by name..."
+      />
+
       {/* Header with Clear all */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-800">Filters</h2>

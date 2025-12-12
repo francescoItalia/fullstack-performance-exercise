@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useUsersQuery } from "../../api/users";
 
-import { SearchBox } from "../molecules";
 import { UserListVirtual, UserFiltersSidebar } from "../organisms";
-import { PageWithSidebarTemplate } from "../templates";
+import { PageWithSidebarTemplate, Header } from "../templates";
 import { useDebouncedValue } from "../../hooks";
 
 export function UsersPage() {
@@ -33,17 +32,11 @@ export function UsersPage() {
 
   return (
     <PageWithSidebarTemplate
-      header={
-        <div className="max-w-md">
-          <SearchBox
-            value={search}
-            onChange={setSearch}
-            placeholder="Search by name..."
-          />
-        </div>
-      }
+      header={<Header />}
       sidebar={
         <UserFiltersSidebar
+          search={search}
+          onSearchChange={setSearch}
           selectedHobbies={selectedHobbies}
           selectedNationalities={selectedNationalities}
           onHobbiesChange={setSelectedHobbies}
