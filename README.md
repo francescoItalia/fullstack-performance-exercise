@@ -8,7 +8,20 @@ This repository demonstrates fullstack JavaScript capabilities through a series 
 
 ### Exercise 1: Paginated User List with Virtual Scroll ✅
 
-### Exercise 2: TBD
+### Exercise 2: HTTP Streaming Strategies ✅
+
+Demonstrates three different approaches to streaming data from server to client, each with unique characteristics:
+
+| Method | Content-Type | Format | Use Case |
+|--------|-------------|--------|----------|
+| **Raw HTTP Chunked** | `text/plain` | Character-by-character | Simple text streaming |
+| **NDJSON** | `application/x-ndjson` | One JSON object per line | Structured data streaming |
+| **SSE** | `text/event-stream` | Event-based with typed listeners | ChatGPT-style streaming |
+
+Each demo simulates an LLM response with:
+- `message_start` event with metadata (model, message_id)
+- `delta` events with content chunks
+- `message_complete` event with usage stats
 
 ### Exercise 3: TBD
 
@@ -62,29 +75,36 @@ yarn workspace fullstack-performance-client dev
 │   └── src/
 │       ├── entities/       # Domain entities (User)
 │       ├── api/            # API request/response types
-│       │   └── users/      # User-related API types
+│       │   ├── users/      # User-related API types
+│       │   └── stream/     # Streaming event types
 │       └── common/         # Shared utilities (Pagination)
 │
 ├── server/                 # Express backend
 │   └── src/
 │       ├── app.ts          # Express app setup
 │       ├── server.ts       # Server entry point
-│       └── users/          # User domain
-│           ├── user.controller.ts  # HTTP handlers
-│           ├── user.service.ts     # Business logic
-│           ├── user.db.ts          # Data access (mock DB)
-│           └── user.routes.ts      # Route definitions
+│       ├── users/          # User domain
+│       │   ├── user.controller.ts  # HTTP handlers
+│       │   ├── user.service.ts     # Business logic
+│       │   ├── user.db.ts          # Data access (mock DB)
+│       │   └── user.routes.ts      # Route definitions
+│       └── stream/         # Streaming endpoints
+│           ├── stream.controller.ts  # HTTP handlers for streaming
+│           ├── stream.service.ts     # Stream generators
+│           ├── stream.routes.ts      # Route definitions
+│           └── stream.utils.ts       # Delay helpers
 │
 ├── client/                 # React frontend (Vite)
 │   └── src/
 │       ├── api/            # API layer
 │       │   ├── apiClient.ts        # Fetch wrapper
 │       │   ├── queryKeys.ts        # React Query key factory
-│       │   └── users/              # User API hooks & endpoints
+│       │   ├── users/              # User API hooks & endpoints
+│       │   └── stream/             # Streaming hooks & endpoints
 │       ├── components/     # Atomic Design structure
 │       │   ├── atoms/      # Basic UI elements
 │       │   ├── molecules/  # Composite components
-│       │   ├── organisms/  # Complex components
+│       │   ├── organisms/  # Complex components (incl. stream demos)
 │       │   ├── templates/  # Page layouts
 │       │   └── pages/      # Page components
 │       └── hooks/          # Custom React hooks
@@ -105,6 +125,10 @@ yarn workspace fullstack-performance-client dev
 - **RESTful API**:
   - `GET /api/users` - Paginated users with search/filter
   - `GET /api/users/metadata` - Top hobbies and nationalities for filters
+- **Streaming API**:
+  - `GET /api/stream/raw-http-chunked` - Raw text streaming
+  - `GET /api/stream/ndjson` - NDJSON structured streaming
+  - `GET /api/stream/sse` - Server-Sent Events (ChatGPT-style)
 
 ### Frontend (React + TypeScript)
 
@@ -169,5 +193,49 @@ Fetch top 20 hobbies and nationalities for filter options.
   "hobbies": ["coding", "music", ...],
   "nationalities": ["United States", "Germany", ...]
 }
+```
+
+---
+
+## Streaming API Reference
+
+### GET /api/stream/raw-http-chunked
+
+Streams raw text character-by-character using `Transfer-Encoding: chunked`.
+
+**Content-Type:** `text/plain`
+
+### GET /api/stream/ndjson
+
+Streams structured events as Newline Delimited JSON.
+
+**Content-Type:** `application/x-ndjson`
+
+**Format:**
+```
+{"type":"message_start","message_id":"msg_abc","model":"mock-gpt-1","created_at":1234567890}
+{"type":"delta","delta":{"content":"Hello"},"index":0}
+{"type":"delta","delta":{"content":" world"},"index":1}
+{"type":"message_complete","finish_reason":"stop","usage":{"completion_tokens":2,"total_tokens":2}}
+```
+
+### GET /api/stream/sse
+
+Streams events using Server-Sent Events (the protocol ChatGPT uses).
+
+**Content-Type:** `text/event-stream`
+
+**Format:**
+```
+event: message_start
+data: {"message_id":"msg_abc","model":"mock-gpt-1","created_at":1234567890}
+
+event: delta
+data: {"delta":{"content":"Hello"},"index":0}
+
+event: message_complete
+data: {"finish_reason":"stop","usage":{"completion_tokens":2,"total_tokens":2}}
+
+data: [DONE]
 ```
 
