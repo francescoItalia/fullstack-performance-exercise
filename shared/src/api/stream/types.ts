@@ -1,10 +1,13 @@
 /**
  * Types for streaming responses.
- * Shared between server and client for NDJSON streaming.
+ * Shared between server and client.
+ *
+ * These types are used by both NDJSON and SSE streaming endpoints.
+ * The format differs (NDJSON vs SSE protocol) but the event structure is the same.
  */
 
 // ============================================================
-// NDJSON Chat Completion Events
+// Chat Completion Events (used by NDJSON and SSE)
 // ============================================================
 
 /**
@@ -46,19 +49,6 @@ export type ChatStreamEvent =
   | ChatMessageStart
   | ChatDelta
   | ChatMessageComplete;
-
-// ============================================================
-// SSE Job Progress Events
-// ============================================================
-
-/**
- * Job progress event for SSE streaming
- */
-export type JobProgressEvent = {
-  step: string;
-  progress: number; // 0–100
-  message: string;
-};
 
 // ============================================================
 // Stream State (Client-side)

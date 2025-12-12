@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { delay, delayRandom } from "./stream.utils.js";
-import type { ChatStreamEvent, JobProgressEvent } from "shared";
+import type { ChatStreamEvent } from "shared";
 
 // ============================================================
 // RAW HTTP CHUNKED STREAMING
@@ -40,7 +40,7 @@ export async function* streamChatCompletion(): AsyncGenerator<ChatStreamEvent> {
   };
 
   // Small delay to simulate "thinking"
-  await delay(2000);
+  await delayRandom(2000, 3000);
 
   // 2. Generate and stream tokens
   const text = faker.lorem.paragraphs(3, "\n\n");
@@ -73,31 +73,24 @@ export async function* streamChatCompletion(): AsyncGenerator<ChatStreamEvent> {
 }
 
 // ============================================================
-// SSE STREAMING (Job Progress)
+// SSE STREAMING (Server-Sent Events)
 // ============================================================
 
 /**
- * Simulates a multi-step job with progress updates.
- * Useful for demonstrating Server-Sent Events.
+ * Simulates a chat completion using Server-Sent Events (SSE).
+ * This is the same protocol ChatGPT uses for streaming responses.
+ *
+ * SSE is a browser-native protocol that enables server-to-client streaming
+ * over a single HTTP connection. The browser handles reconnection automatically.
+ *
+ * We reuse the same ChatStreamEvent types as NDJSON - only the transport differs:
+ * - NDJSON: `{"type":"delta",...}\n`
+ * - SSE: `event: delta\ndata: {...}\n\n`
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events
  */
-export async function* streamJobProgress(): AsyncGenerator<JobProgressEvent> {
-  const steps = [
-    "uploading video",
-    "extracting frames",
-    "generating final report",
-  ];
-
-  const progressStep = 20;
-
-  for (const step of steps) {
-    for (let progress = 0; progress <= 100; progress += progressStep) {
-      yield {
-        step,
-        progress,
-        message: `${step}... ${progress}%`,
-      };
-
-      await delayRandom(500, 3000);
-    }
-  }
+export async function* streamChatCompletionSSE(): AsyncGenerator<ChatStreamEvent> {
+  // Reuse the same logic as NDJSON streaming
+  // Take everything the other generator yields, and yield it again from this one.
+  yield* streamChatCompletion();
 }

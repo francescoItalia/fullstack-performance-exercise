@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import {
   streamGeneratedText,
   streamChatCompletion,
-  streamJobProgress,
+  streamChatCompletionSSE,
 } from "./stream.service.js";
 import { delay } from "./stream.utils.js";
 
@@ -51,23 +51,39 @@ export async function streamTextNDJSON(
   // Recommended for proxies (Heroku, Vercel…)
   res.flushHeaders?.();
 
-  for await (const event of streamChatCompletion()) {
-    res.write(`${JSON.stringify(event)}\n`);
+  for await (const streamEvent of streamChatCompletion()) {
+    res.write(`${JSON.stringify(streamEvent)}\n`);
   }
 
   res.end();
 }
 
 /**
- * Streams text via Server-Sent Events (SSE)
- * Each character is sent as a separate SSE message.
+ * Streams chat completion via Server-Sent Events (SSE).
+ * This is the same protocol ChatGPT uses for streaming responses.
+ *
+ * SSE Format (per event):
+ *   event: message_start
+ *   data: {"message_id":"msg_abc123","model":"mock-gpt-1","created_at":1234567890}
+ *
+ *   event: delta
+ *   data: {"content":"Hello","index":0}
+ *
+ *   event: message_complete
+ *   data: {"finish_reason":"stop","usage":{"total_tokens":42}}
+ *
+ *   data: [DONE]
+ *
+ * The `event:` line specifies the event type (used by EventSource.addEventListener).
+ * The `data:` line contains the JSON payload.
+ * Events are separated by double newlines.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events
  */
 export async function streamTextSSE(
   _req: Request,
   res: Response
 ): Promise<void> {
-  const jobProgress = streamJobProgress();
-
   res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -75,11 +91,17 @@ export async function streamTextSSE(
   // Recommended for proxies (Heroku, Vercel…)
   res.flushHeaders?.();
 
-  for await (const evt of jobProgress) {
-    res.write(`event: progress\n`);
-    res.write(`data: ${JSON.stringify(evt)}\n\n`);
+  for await (const streamEvent of streamChatCompletionSSE()) {
+    // SSE format: event type on its own line, then data
+    res.write(`event: ${streamEvent.type}\n`);
+
+    // For SSE, we send just the payload without the "type" field
+    // (the type is already in the event: line)
+    const { type, ...payload } = streamEvent;
+    res.write(`data: ${JSON.stringify(payload)}\n\n`);
   }
 
+  // Final done marker (ChatGPT convention)
   res.write("data: [DONE]\n\n");
   res.end();
 }

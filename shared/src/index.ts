@@ -14,7 +14,6 @@ export type {
   ChatDelta,
   ChatMessageComplete,
   ChatStreamEvent,
-  JobProgressEvent,
   StreamState,
   ChatMetadata,
   ChatUsage,
