@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import {
   streamGeneratedText,
-  streamGeneratedToken,
+  streamChatCompletion,
   streamJobProgress,
 } from "./stream.service.js";
 import { delay } from "./stream.utils.js";
@@ -30,33 +30,31 @@ export async function streamTextRaw(
 }
 
 /**
- * Streams text as NDJSON lines (OpenAI style)
+ * Streams text as pure NDJSON (Newline Delimited JSON)
+ *
  * Format:
- *   data: {"token":"Here"}
- *   data: {"token":"is some"}
- *   data: {"token":"text"}
- *   ...
- *   data: [DONE]
+ *   {"type":"message_start","message_id":"msg_abc123","model":"mock-gpt-1","created_at":1234567890}
+ *   {"type":"delta","delta":{"content":"Hello"},"index":0}
+ *   {"type":"delta","delta":{"content":" world"},"index":1}
+ *   {"type":"message_complete","finish_reason":"stop","usage":{"total_tokens":2}}
+ *
+ * Each JSON object on its own line. No prefixes, no done markers.
  */
 export async function streamTextNDJSON(
   _req: Request,
   res: Response
 ): Promise<void> {
-  const text = streamGeneratedToken();
-
-  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  res.setHeader("Content-Type", "application/x-ndjson; charset=utf-8");
   res.setHeader("Transfer-Encoding", "chunked");
   res.setHeader("Cache-Control", "no-cache");
 
   // Recommended for proxies (Heroku, Vercel…)
   res.flushHeaders?.();
 
-  for await (const token of text) {
-    res.write(`data: ${JSON.stringify({ token })}\n\n`);
+  for await (const event of streamChatCompletion()) {
+    res.write(`${JSON.stringify(event)}\n`);
   }
 
-  // Final end marker (OpenAI style)
-  res.write("data: [DONE]\n\n");
   res.end();
 }
 
