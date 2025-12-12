@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useUsersQuery } from "../../api/users";
-
 import { UserListVirtual, UserFiltersSidebar } from "../organisms";
 import { PageWithSidebarTemplate, Header } from "../templates";
 import { useDebouncedValue } from "../../hooks";
@@ -12,7 +11,6 @@ export function UsersPage() {
     []
   );
 
-  // Debounce search to avoid excessive API calls
   const debouncedSearch = useDebouncedValue(search);
 
   const {

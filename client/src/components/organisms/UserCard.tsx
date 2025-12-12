@@ -6,15 +6,6 @@ type UserCardProps = {
   user: User;
 };
 
-/**
- * Card layout matching spec:
- * |----------------------------------|
- * | avatar      first_name+last_name |
- * |             nationality      age |
- * |                                  |
- * |             (2 hobbies) (+n)     |
- * |----------------------------------|
- */
 export function UserCard({ user }: UserCardProps) {
   return (
     <div className="h-full p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex gap-4">

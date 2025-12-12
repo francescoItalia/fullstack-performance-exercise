@@ -1,9 +1,6 @@
 import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
-
-const navItems = [
-  { to: "/users", label: "Users" },
-] as const;
+import { NAV_ITEMS, ROUTES } from "../../routes";
 
 type HeaderProps = {
   children?: ReactNode;
@@ -13,13 +10,16 @@ export function Header({ children }: HeaderProps) {
   return (
     <div className="flex items-center gap-6">
       {/* Logo / Brand */}
-      <NavLink to="/" className="text-xl font-bold text-gray-900 flex-shrink-0">
+      <NavLink
+        to={ROUTES.HOME}
+        className="text-xl font-bold text-gray-900 flex-shrink-0"
+      >
         Performance App
       </NavLink>
 
       {/* Navigation */}
       <nav className="flex items-center gap-6 flex-shrink-0">
-        {navItems.map((item) => (
+        {NAV_ITEMS.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
@@ -36,7 +36,7 @@ export function Header({ children }: HeaderProps) {
         ))}
       </nav>
 
-      {/* Page-specific content (e.g., SearchBox) */}
+      {/* Page-specific content */}
       {children && <div className="flex-1">{children}</div>}
     </div>
   );
