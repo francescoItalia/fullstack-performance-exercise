@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { streamRawText } from "./stream.endpoints";
-
-export type StreamState = "idle" | "streaming" | "complete" | "error";
+import type { StreamState } from "shared";
 
 /**
  * Hook for consuming raw HTTP chunked streaming.
