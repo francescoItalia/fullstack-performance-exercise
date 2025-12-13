@@ -1,3 +1,2 @@
-export { UsersPage } from "./UsersPage";
-export { StreamsPage } from "./StreamsPage";
-
+export { UsersPage } from "./usersPage/UsersPage";
+export { StreamsPage } from "./streamsPage/StreamsPage";

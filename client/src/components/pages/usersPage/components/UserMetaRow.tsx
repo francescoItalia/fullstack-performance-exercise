@@ -1,4 +1,4 @@
-import { Text } from "../atoms";
+import { Text } from "../../../atoms";
 
 type UserMetaRowProps = {
   nationality: string;

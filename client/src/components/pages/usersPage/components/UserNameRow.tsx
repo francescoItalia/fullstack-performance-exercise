@@ -1,4 +1,4 @@
-import { Avatar, Text } from "../atoms";
+import { Avatar, Text } from "../../../atoms";
 
 type UserNameRowProps = {
   avatar: string;
@@ -16,4 +16,3 @@ export function UserNameRow({ avatar, firstName, lastName }: UserNameRowProps) {
     </div>
   );
 }
-

@@ -1,5 +1,6 @@
-import { useStreamSSE } from "../../api/stream";
-import { StreamCard } from "../molecules";
+import { useStreamSSE } from "../../../../api/stream";
+import { Button, StatusIndicator } from "../../../atoms";
+import { StreamCard } from "./StreamCard";
 
 /**
  * Demo component for Server-Sent Events (SSE) streaming.
@@ -33,24 +34,14 @@ export function SSEStreamDemo() {
       footer={
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <button
-              onClick={start}
-              disabled={isStreaming}
-              className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg
-                hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed
-                transition-colors"
-            >
+            <Button onClick={start} disabled={isStreaming}>
               {isStreaming ? "Generating..." : "Start Stream"}
-            </button>
+            </Button>
 
             {(isComplete || error) && (
-              <button
-                onClick={reset}
-                className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg
-                  hover:bg-gray-200 transition-colors"
-              >
+              <Button variant="secondary" onClick={reset}>
                 Reset
-              </button>
+              </Button>
             )}
           </div>
 
@@ -58,10 +49,7 @@ export function SSEStreamDemo() {
           <div className="flex items-center gap-2 text-sm">
             {isStreaming && (
               <span className="flex items-center gap-1.5 text-amber-600">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
-                </span>
+                <StatusIndicator status="pending" />
                 Generating...
               </span>
             )}
@@ -129,4 +117,3 @@ export function SSEStreamDemo() {
     </StreamCard>
   );
 }
-

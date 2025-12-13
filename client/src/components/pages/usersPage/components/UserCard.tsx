@@ -1,6 +1,6 @@
 import type { User } from "shared";
-import { Avatar, Text } from "../atoms";
-import { HobbiesRow } from "../molecules";
+import { Avatar, Text } from "../../../atoms";
+import { HobbiesRow } from "./HobbiesRow";
 
 type UserCardProps = {
   user: User;

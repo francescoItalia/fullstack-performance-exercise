@@ -23,7 +23,15 @@ Each demo simulates an LLM response with:
 - `delta` events with content chunks
 - `message_complete` event with usage stats
 
-### Exercise 3: TBD
+### Exercise 3: Queue Processing with Web Workers & Socket.IO ✅
+
+Demonstrates asynchronous job processing with real-time updates:
+
+- **HTTP POST** submits jobs to a server-side queue (server generates `requestId`)
+- **Worker Thread** processes jobs with a 2-second delay
+- **Socket.IO** broadcasts results to all connected clients in real-time
+
+Architecture: Client → HTTP API → Queue → Worker Thread → Socket.IO → Client
 
 ---
 
@@ -76,7 +84,8 @@ yarn workspace fullstack-performance-client dev
 │       ├── entities/       # Domain entities (User)
 │       ├── api/            # API request/response types
 │       │   ├── users/      # User-related API types
-│       │   └── stream/     # Streaming event types
+│       │   ├── stream/     # Streaming event types
+│       │   └── queue/      # Queue/WebSocket event types
 │       └── common/         # Shared utilities (Pagination)
 │
 ├── server/                 # Express backend
@@ -84,15 +93,22 @@ yarn workspace fullstack-performance-client dev
 │       ├── app.ts          # Express app setup
 │       ├── server.ts       # Server entry point
 │       ├── users/          # User domain
-│       │   ├── user.controller.ts  # HTTP handlers
-│       │   ├── user.service.ts     # Business logic
-│       │   ├── user.db.ts          # Data access (mock DB)
-│       │   └── user.routes.ts      # Route definitions
-│       └── stream/         # Streaming endpoints
-│           ├── stream.controller.ts  # HTTP handlers for streaming
-│           ├── stream.service.ts     # Stream generators
-│           ├── stream.routes.ts      # Route definitions
-│           └── stream.utils.ts       # Delay helpers
+│       │   ├── user.controller.ts
+│       │   ├── user.service.ts
+│       │   ├── user.db.ts
+│       │   └── user.routes.ts
+│       ├── stream/         # Streaming endpoints
+│       │   ├── stream.controller.ts
+│       │   ├── stream.service.ts
+│       │   ├── stream.routes.ts
+│       │   └── stream.utils.ts
+│       ├── queue/          # Queue processing
+│       │   ├── queue.controller.ts
+│       │   ├── queue.service.ts
+│       │   ├── queue.worker.ts
+│       │   └── queue.routes.ts
+│       └── websocket/      # Socket.IO
+│           └── ws.service.ts
 │
 ├── client/                 # React frontend (Vite)
 │   └── src/
@@ -100,14 +116,24 @@ yarn workspace fullstack-performance-client dev
 │       │   ├── apiClient.ts        # Fetch wrapper
 │       │   ├── queryKeys.ts        # React Query key factory
 │       │   ├── users/              # User API hooks & endpoints
-│       │   └── stream/             # Streaming hooks & endpoints
-│       ├── components/     # Atomic Design structure
-│       │   ├── atoms/      # Basic UI elements
-│       │   ├── molecules/  # Composite components
-│       │   ├── organisms/  # Complex components (incl. stream demos)
-│       │   ├── templates/  # Page layouts
-│       │   └── pages/      # Page components
-│       └── hooks/          # Custom React hooks
+│       │   ├── stream/             # Streaming hooks & endpoints
+│       │   └── queue/              # Queue API + Socket.IO hooks
+│       ├── components/
+│       │   ├── atoms/              # Basic UI elements (Badge, Input, etc.)
+│       │   ├── molecules/          # Composite components (PageTitle, InfoBox)
+│       │   ├── templates/          # Page layouts (Header, PageTemplate)
+│       │   └── pages/              # Page components (colocated structure)
+│       │       ├── usersPage/
+│       │       │   ├── UsersPage.tsx
+│       │       │   └── components/   # Page-specific components
+│       │       ├── streamsPage/
+│       │       │   ├── StreamsPage.tsx
+│       │       │   └── components/
+│       │       └── queuesPage/
+│       │           ├── QueuesPage.tsx
+│       │           └── components/
+│       ├── hooks/          # Custom React hooks
+│       └── routes.ts       # Centralized route config
 │
 ├── package.json            # Root workspace config
 ├── tsconfig.json           # Root TypeScript config
@@ -129,12 +155,21 @@ yarn workspace fullstack-performance-client dev
   - `GET /api/stream/raw-http-chunked` - Raw text streaming
   - `GET /api/stream/ndjson` - NDJSON structured streaming
   - `GET /api/stream/sse` - Server-Sent Events (ChatGPT-style)
+- **Queue API**:
+  - `POST /api/queue/submit` - Submit job (returns 202 with server-generated requestId)
+  - `GET /api/queue/status` - Queue status (for monitoring)
+  - Socket.IO `job_result` event - Broadcasts completed job results
 
 ### Frontend (React + TypeScript)
 
-- **Atomic Design**: Components organized by complexity (atoms → pages)
+- **Atomic Design** with colocated page components:
+  - `atoms/` - Basic UI elements (shared)
+  - `molecules/` - Composite components (shared)
+  - `templates/` - Page layouts (shared)
+  - `pages/*/components/` - Page-specific components (colocated)
 - **TanStack Query**: Data fetching with caching, infinite queries
 - **TanStack Virtual**: Virtual scrolling for performance
+- **Socket.IO Client**: Real-time WebSocket communication
 - **Tailwind CSS**: Utility-first styling
 
 ### Shared Types
@@ -237,5 +272,41 @@ event: message_complete
 data: {"finish_reason":"stop","usage":{"completion_tokens":2,"total_tokens":2}}
 
 data: [DONE]
+```
+
+---
+
+## Queue API Reference
+
+### POST /api/queue/submit
+
+Submit a job to the processing queue. Server generates the `requestId`.
+
+**Request:**
+```json
+{
+  "payload": { "message": "any data" }
+}
+```
+
+**Response (202 Accepted):**
+```json
+{
+  "status": "pending",
+  "requestId": "uuid-generated-by-server",
+  "queuedAt": 1234567890
+}
+```
+
+### Socket.IO: job_result Event
+
+When a job completes, the server broadcasts to all connected clients:
+
+```json
+{
+  "requestId": "uuid-generated-by-server",
+  "result": "Processed job with payload: {...}",
+  "processedAt": 1234567892
+}
 ```
 

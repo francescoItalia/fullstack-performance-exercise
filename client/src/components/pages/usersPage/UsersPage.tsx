@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useUsersQuery } from "../../api/users";
-import { UserListVirtual, UserFiltersSidebar } from "../organisms";
-import { PageWithSidebarTemplate, Header } from "../templates";
-import { useDebouncedValue } from "../../hooks";
+import { useUsersQuery } from "../../../api/users";
+import { UserListVirtual, UserFiltersSidebar } from "./components";
+import { PageWithSidebarTemplate } from "../../templates";
+import { useDebouncedValue } from "../../../hooks";
 
 export function UsersPage() {
   const [search, setSearch] = useState("");
@@ -30,7 +30,6 @@ export function UsersPage() {
 
   return (
     <PageWithSidebarTemplate
-      header={<Header />}
       sidebar={
         <UserFiltersSidebar
           search={search}

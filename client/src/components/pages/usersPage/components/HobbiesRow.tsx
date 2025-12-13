@@ -1,4 +1,4 @@
-import { Badge } from "../atoms";
+import { Badge } from "../../../atoms";
 
 type HobbiesRowProps = {
   hobbies: string[];
@@ -18,4 +18,3 @@ export function HobbiesRow({ hobbies, maxDisplay = 2 }: HobbiesRowProps) {
     </div>
   );
 }
-
