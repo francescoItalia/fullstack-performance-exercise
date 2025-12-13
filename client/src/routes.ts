@@ -10,6 +10,7 @@ export const ROUTES = {
   HOME: "/",
   USERS: "/users",
   STREAMS: "/streams",
+  QUEUES: "/queues-sockets",
 } as const;
 
 // Type for route paths
@@ -24,6 +25,7 @@ export type NavItem = {
 export const NAV_ITEMS: readonly NavItem[] = [
   { to: ROUTES.USERS, label: "Users" },
   { to: ROUTES.STREAMS, label: "Streams" },
+  { to: ROUTES.QUEUES, label: "Queues" },
 ] as const;
 
 // Route config for React Router (lazy-loadable)

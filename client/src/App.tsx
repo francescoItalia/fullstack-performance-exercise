@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { UsersPage, StreamsPage } from "./components/pages";
+import { UsersPage, StreamsPage, QueuesPage } from "./components/pages";
 import { ROUTES } from "./routes";
 
 export default function App() {
@@ -13,6 +13,7 @@ export default function App() {
         />
         <Route path={ROUTES.USERS} element={<UsersPage />} />
         <Route path={ROUTES.STREAMS} element={<StreamsPage />} />
+        <Route path={ROUTES.QUEUES} element={<QueuesPage />} />
       </Routes>
     </BrowserRouter>
   );
