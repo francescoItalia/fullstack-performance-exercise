@@ -1,3 +1,27 @@
+/**
+ * Stream Service - HTTP Streaming Generators
+ *
+ * This module provides different streaming strategies for sending data
+ * from server to client. Each method demonstrates a different approach:
+ *
+ * 1. RAW HTTP CHUNKED: Character-by-character streaming (text/plain)
+ *    - Simplest form of HTTP streaming
+ *    - Uses Transfer-Encoding: chunked
+ *    - Good for: simple text, logs, CLI output
+ *
+ * 2. NDJSON (Newline Delimited JSON): Structured event streaming
+ *    - Each line is a complete JSON object
+ *    - Content-Type: application/x-ndjson
+ *    - Good for: structured data, progress updates, batch processing
+ *
+ * 3. SSE (Server-Sent Events): Browser-native event streaming
+ *    - Uses EventSource API on client
+ *    - Content-Type: text/event-stream
+ *    - Good for: real-time updates, chat, notifications
+ *    - This is what ChatGPT uses for streaming responses
+ *
+ */
+
 import { faker } from "@faker-js/faker";
 import { delay, delayRandom } from "./stream.utils.js";
 import type { ChatStreamEvent } from "shared";
