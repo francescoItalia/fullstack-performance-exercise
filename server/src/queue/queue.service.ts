@@ -1,10 +1,13 @@
 /**
- * Queue service for managing job processing with worker threads.
+ * Queue Service - Job Processing with Worker Threads
  *
- * Architecture:
- * 1. Jobs are added to an in-memory queue
- * 2. A worker thread processes jobs one at a time
- * 3. Results are broadcast via WebSocket
+ * Architecture flow:
+ * 1. Client POSTs job → Server immediately returns "pending" (202 Accepted)
+ * 2. Job is added to in-memory FIFO queue
+ * 3. Worker thread processes jobs one at a time (single consumer)
+ * 4. When complete, result is broadcast to all WebSocket clients
+ *
+ * @module queue.service
  */
 
 import { Worker } from "worker_threads";

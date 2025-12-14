@@ -1,6 +1,12 @@
 /**
- * Socket.IO service for real-time communication.
- * Broadcasts job results to connected clients.
+ * WebSocket Service - Real-time Communication Layer
+ *
+ * Uses Socket.IO to enable bidirectional communication between server and clients.
+ * Currently used for broadcasting job results from the queue worker to all clients.
+ *
+ * This service is initialized once at server startup and maintains
+ * a singleton Socket.IO instance.
+ *
  */
 
 import { Server as SocketIOServer } from "socket.io";
