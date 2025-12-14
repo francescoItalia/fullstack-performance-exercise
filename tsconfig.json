@@ -25,7 +25,7 @@
     "esModuleInterop": true,
     // Allows default import of CommonJS modules:
     //     import express from "express"
-    // Without this, you'd need:
+    // Without this, we'd need:
     //     import * as express from "express";
     // Improves ergonomics + compatibility with JS ecosystem.
 
