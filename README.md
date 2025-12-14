@@ -74,6 +74,26 @@ yarn workspace fullstack-performance-server dev
 yarn workspace fullstack-performance-client dev
 ```
 
+### Testing
+
+```bash
+# Run all server tests
+cd server && yarn test
+
+# Run tests in watch mode
+cd server && yarn test:watch
+
+# Generate coverage report
+cd server && yarn test:coverage
+```
+
+**Test Coverage:**
+- **Unit Tests**: Service layer (users)
+- **Integration Tests**: HTTP routes (users, stream, queue)
+- **Total**: 63 tests covering all endpoints
+
+Tests use Jest with TypeScript ESM support. Streaming tests mock delays for fast execution.
+
 ---
 
 ## Project Structure
@@ -96,17 +116,20 @@ yarn workspace fullstack-performance-client dev
 │       │   ├── user.controller.ts
 │       │   ├── user.service.ts
 │       │   ├── user.db.ts
-│       │   └── user.routes.ts
+│       │   ├── user.routes.ts
+│       │   └── __tests__/  # Unit & integration tests
 │       ├── stream/         # Streaming endpoints
 │       │   ├── stream.controller.ts
 │       │   ├── stream.service.ts
 │       │   ├── stream.routes.ts
-│       │   └── stream.utils.ts
+│       │   ├── stream.utils.ts
+│       │   └── __tests__/  # Integration tests
 │       ├── queue/          # Queue processing
 │       │   ├── queue.controller.ts
 │       │   ├── queue.service.ts
 │       │   ├── queue.worker.ts
-│       │   └── queue.routes.ts
+│       │   ├── queue.routes.ts
+│       │   └── __tests__/  # Integration tests
 │       └── websocket/      # Socket.IO
 │           └── ws.service.ts
 │
@@ -186,6 +209,7 @@ yarn workspace fullstack-performance-client dev
 |----------|------------------------------------------------|
 | Frontend | React 19, Vite, TanStack Query, TanStack Virtual |
 | Backend  | Express 5, TypeScript, ts-node                  |
+| Testing  | Jest, ts-jest, Supertest                        |
 | Styling  | Tailwind CSS 4                                  |
 | Monorepo | Yarn Workspaces, Lerna                          |
 | Types    | Shared TypeScript workspace                     |
