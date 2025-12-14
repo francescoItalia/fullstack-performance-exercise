@@ -1,5 +1,6 @@
 import { useUsersMetadata } from "@api/users";
 import { FilterSection, SearchBox } from "@components/molecules";
+import { FILTERS } from "../users.constants";
 
 type UserFiltersSidebarProps = {
   search: string;
@@ -49,31 +50,31 @@ export function UserFiltersSidebar({
       <SearchBox
         value={search}
         onChange={onSearchChange}
-        placeholder="Search by name..."
+        placeholder={FILTERS.SEARCH_PLACEHOLDER}
       />
 
       {/* Header with Clear all */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-800">Filters</h2>
+        <h2 className="text-lg font-semibold text-gray-800">{FILTERS.TITLE}</h2>
         {hasFilters && (
           <button
             onClick={clearAll}
             className="text-xs text-indigo-600 hover:text-indigo-700"
           >
-            Clear all
+            {FILTERS.CLEAR_ALL}
           </button>
         )}
       </div>
 
       <FilterSection
-        title="Hobbies"
+        title={FILTERS.HOBBIES_TITLE}
         options={hobbies}
         selected={selectedHobbies}
         onChange={onHobbiesChange}
       />
 
       <FilterSection
-        title="Nationalities"
+        title={FILTERS.NATIONALITIES_TITLE}
         options={nationalities}
         selected={selectedNationalities}
         onChange={onNationalitiesChange}

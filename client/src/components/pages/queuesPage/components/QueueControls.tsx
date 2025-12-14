@@ -1,4 +1,5 @@
 import { StatusIndicator, Button } from "@components/atoms";
+import { CONNECTION_STATUS, STATS_LABELS, QUEUE_BUTTONS } from "../queues.constants";
 
 type QueueControlsProps = {
   isConnected: boolean;
@@ -31,18 +32,18 @@ export function QueueControls({
         <div className="flex items-center gap-2">
           <StatusIndicator status={isConnected ? "completed" : "error"} />
           <span className="text-sm font-medium text-gray-700">
-            {isConnected ? "Connected" : "Disconnected"}
+            {isConnected ? CONNECTION_STATUS.CONNECTED : CONNECTION_STATUS.DISCONNECTED}
           </span>
         </div>
 
         {/* Stats */}
         <div className="flex items-center gap-4 text-sm text-gray-600">
           <span>
-            Pending:{" "}
+            {STATS_LABELS.PENDING}{" "}
             <span className="font-semibold text-amber-600">{pendingCount}</span>
           </span>
           <span>
-            Completed:{" "}
+            {STATS_LABELS.COMPLETED}{" "}
             <span className="font-semibold text-green-600">
               {completedCount}
             </span>
@@ -53,19 +54,19 @@ export function QueueControls({
         <div className="flex items-center gap-2">
           {hasJobs && (
             <Button variant="secondary" onClick={onClearAll}>
-              Clear All
+              {QUEUE_BUTTONS.CLEAR_ALL}
             </Button>
           )}
 
           <Button onClick={onSubmit} disabled={!isConnected || isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit Job"}
+            {isSubmitting ? QUEUE_BUTTONS.SUBMITTING : QUEUE_BUTTONS.SUBMIT_JOB}
           </Button>
 
           <Button
             onClick={onSubmitBatch}
             disabled={!isConnected || isSubmitting}
           >
-            {isSubmitting ? "Submitting..." : "Submit 20 Jobs"}
+            {isSubmitting ? QUEUE_BUTTONS.SUBMITTING : QUEUE_BUTTONS.SUBMIT_BATCH}
           </Button>
         </div>
       </div>

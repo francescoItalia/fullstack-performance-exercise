@@ -1,6 +1,7 @@
 import { useStreamRaw } from "@api/stream";
 import { Button, StatusIndicator } from "@components/atoms";
 import { StreamCard } from "./StreamCard";
+import { RAW_STREAM, STREAM_BUTTONS, STREAM_STATUS } from "../streams.constants";
 
 /**
  * Demo component for raw HTTP chunked streaming.
@@ -11,19 +12,19 @@ export function RawStreamDemo() {
 
   return (
     <StreamCard
-      title="Raw HTTP Chunked"
-      description="Streams text character-by-character using Transfer-Encoding: chunked"
-      badge="text/plain"
+      title={RAW_STREAM.TITLE}
+      description={RAW_STREAM.DESCRIPTION}
+      badge={RAW_STREAM.BADGE}
       footer={
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Button onClick={start} disabled={isStreaming}>
-              {isStreaming ? "Streaming..." : "Start Stream"}
+              {isStreaming ? STREAM_BUTTONS.STREAMING : STREAM_BUTTONS.START}
             </Button>
 
             {(isComplete || error) && (
               <Button variant="secondary" onClick={reset}>
-                Reset
+                {STREAM_BUTTONS.RESET}
               </Button>
             )}
           </div>
@@ -33,13 +34,13 @@ export function RawStreamDemo() {
             {isStreaming && (
               <span className="flex items-center gap-1.5 text-amber-600">
                 <StatusIndicator status="pending" />
-                Receiving...
+                {STREAM_STATUS.RECEIVING}
               </span>
             )}
             {isComplete && (
-              <span className="text-green-600 font-medium">✓ Complete</span>
+              <span className="text-green-600 font-medium">{STREAM_STATUS.COMPLETE}</span>
             )}
-            {error && <span className="text-red-600">✕ Error</span>}
+            {error && <span className="text-red-600">{STREAM_STATUS.ERROR}</span>}
           </div>
         </div>
       }
@@ -57,9 +58,7 @@ export function RawStreamDemo() {
           text-gray-100 whitespace-pre-wrap leading-relaxed"
       >
         {text || (
-          <span className="text-gray-500 italic">
-            Click "Start Stream" to begin...
-          </span>
+          <span className="text-gray-500 italic">{RAW_STREAM.PLACEHOLDER}</span>
         )}
         {isStreaming && (
           <span className="inline-block w-2 h-4 bg-indigo-400 animate-pulse ml-0.5" />
@@ -69,7 +68,7 @@ export function RawStreamDemo() {
       {/* Character count */}
       {text && (
         <div className="mt-2 text-xs text-gray-500 text-right">
-          {text.length.toLocaleString()} characters received
+          {text.length.toLocaleString()} {RAW_STREAM.CHARS_SUFFIX}
         </div>
       )}
     </StreamCard>

@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { User } from "shared";
 import { UserCard } from "./UserCard";
+import { USER_LIST } from "../users.constants";
 
 type UserListVirtualProps = {
   users: User[];
@@ -49,7 +50,7 @@ export function UserListVirtual({
   }, [virtualItems.length, users.length, hasMore, isLoading, onLoadMore]);
 
   if (users.length === 0 && !isLoading) {
-    return <div className="text-center py-8 text-gray-500">No users found</div>;
+    return <div className="text-center py-8 text-gray-500">{USER_LIST.NO_USERS}</div>;
   }
 
   return (
@@ -80,7 +81,7 @@ export function UserListVirtual({
       </div>
 
       {isLoading && (
-        <div className="text-center py-4 text-gray-500">Loading...</div>
+        <div className="text-center py-4 text-gray-500">{USER_LIST.LOADING}</div>
       )}
     </>
   );

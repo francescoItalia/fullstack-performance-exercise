@@ -1,6 +1,7 @@
 import { useStreamSSE } from "@api/stream";
 import { Button, StatusIndicator } from "@components/atoms";
 import { StreamCard } from "./StreamCard";
+import { SSE_STREAM, STREAM_BUTTONS, STREAM_STATUS } from "../streams.constants";
 
 /**
  * Demo component for Server-Sent Events (SSE) streaming.
@@ -28,19 +29,19 @@ export function SSEStreamDemo() {
 
   return (
     <StreamCard
-      title="SSE Streaming"
-      description="Server-Sent Events — the protocol ChatGPT uses"
-      badge="text/event-stream"
+      title={SSE_STREAM.TITLE}
+      description={SSE_STREAM.DESCRIPTION}
+      badge={SSE_STREAM.BADGE}
       footer={
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Button onClick={start} disabled={isStreaming}>
-              {isStreaming ? "Generating..." : "Start Stream"}
+              {isStreaming ? STREAM_BUTTONS.GENERATING : STREAM_BUTTONS.START}
             </Button>
 
             {(isComplete || error) && (
               <Button variant="secondary" onClick={reset}>
-                Reset
+                {STREAM_BUTTONS.RESET}
               </Button>
             )}
           </div>
@@ -50,13 +51,13 @@ export function SSEStreamDemo() {
             {isStreaming && (
               <span className="flex items-center gap-1.5 text-amber-600">
                 <StatusIndicator status="pending" />
-                Generating...
+                {STREAM_BUTTONS.GENERATING}
               </span>
             )}
             {isComplete && (
-              <span className="text-green-600 font-medium">✓ Complete</span>
+              <span className="text-green-600 font-medium">{STREAM_STATUS.COMPLETE}</span>
             )}
-            {error && <span className="text-red-600">✕ Error</span>}
+            {error && <span className="text-red-600">{STREAM_STATUS.ERROR}</span>}
           </div>
         </div>
       }
@@ -76,7 +77,7 @@ export function SSEStreamDemo() {
               {metadata.model}
             </span>
             {isStreaming && !content && (
-              <span className="text-gray-400 animate-pulse">thinking...</span>
+              <span className="text-gray-400 animate-pulse">{STREAM_STATUS.THINKING}</span>
             )}
           </div>
           <span className="text-gray-400 font-mono">
@@ -91,9 +92,7 @@ export function SSEStreamDemo() {
           text-gray-100 whitespace-pre-wrap leading-relaxed"
       >
         {content || (
-          <span className="text-gray-500 italic">
-            Click "Start Stream" to generate text...
-          </span>
+          <span className="text-gray-500 italic">{SSE_STREAM.PLACEHOLDER}</span>
         )}
         {isStreaming && content && (
           <span className="inline-block w-2 h-4 bg-violet-400 animate-pulse ml-0.5" />
@@ -103,12 +102,12 @@ export function SSEStreamDemo() {
       {/* Stats footer */}
       <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
         <div>
-          {content && <span>{content.length.toLocaleString()} characters</span>}
+          {content && <span>{content.length.toLocaleString()} {SSE_STREAM.CHARS_SUFFIX}</span>}
         </div>
         <div className="flex items-center gap-3">
           {usage && (
             <span className="font-medium text-gray-600">
-              {usage.totalTokens} tokens
+              {usage.totalTokens} {SSE_STREAM.TOKENS_SUFFIX}
             </span>
           )}
           {elapsedTime && <span>{elapsedTime}ms</span>}

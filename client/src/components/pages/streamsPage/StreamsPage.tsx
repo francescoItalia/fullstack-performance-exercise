@@ -1,6 +1,7 @@
 import { PageTemplate } from "@components/templates";
 import { PageTitle, InfoBox } from "@components/molecules";
 import { RawStreamDemo, NDJSONStreamDemo, SSEStreamDemo } from "./components";
+import { STREAMS_PAGE } from "./streams.constants";
 
 /**
  * Streams demo page showcasing different HTTP streaming strategies.
@@ -14,8 +15,8 @@ export function StreamsPage() {
   return (
     <PageTemplate maxWidth="7xl">
       <PageTitle
-        title="HTTP Streaming Strategies"
-        description="Explore different approaches to streaming data from server to client. Each method has unique characteristics suited for different use cases."
+        title={STREAMS_PAGE.TITLE}
+        description={STREAMS_PAGE.DESCRIPTION}
       />
 
       {/* Demo grid - responsive layout for 3 streaming methods */}
@@ -26,10 +27,8 @@ export function StreamsPage() {
       </div>
 
       <InfoBox
-        title="About This Exercise"
-        description="This page demonstrates reading HTTP responses as streams and displaying
-        content progressively. Each demo shows a different streaming protocol:
-        raw chunked transfer, NDJSON, and Server-Sent Events (SSE)."
+        title={STREAMS_PAGE.ABOUT_TITLE}
+        description={STREAMS_PAGE.ABOUT_DESCRIPTION}
       />
     </PageTemplate>
   );

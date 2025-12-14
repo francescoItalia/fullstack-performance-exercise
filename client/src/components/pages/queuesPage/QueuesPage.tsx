@@ -3,6 +3,7 @@ import { PageTemplate } from "@components/templates";
 import { PageTitle, InfoBox } from "@components/molecules";
 import { useQueue } from "@api/queue";
 import { QueueControls, JobList } from "./components";
+import { QUEUES_PAGE } from "./queues.constants";
 
 /**
  * Queue demo page showcasing async job processing with Socket.IO.
@@ -47,8 +48,8 @@ export function QueuesPage() {
   return (
     <PageTemplate maxWidth="4xl">
       <PageTitle
-        title="Queue Processing with Socket.IO"
-        description="Submit jobs to a server queue. Jobs are processed in a worker thread and results are pushed via Socket.IO in real-time."
+        title={QUEUES_PAGE.TITLE}
+        description={QUEUES_PAGE.DESCRIPTION}
       />
 
       <QueueControls
@@ -65,11 +66,8 @@ export function QueuesPage() {
       <JobList jobs={jobs} />
 
       <InfoBox
-        title="About This Exercise"
-        description="This demonstrates async job processing with Web Workers and Socket.IO.
-          Each job is queued server-side, processed in a worker thread with a
-          2-second delay, and the result is pushed to all connected clients via
-          Socket.IO."
+        title={QUEUES_PAGE.ABOUT_TITLE}
+        description={QUEUES_PAGE.ABOUT_DESCRIPTION}
       />
     </PageTemplate>
   );
