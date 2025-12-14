@@ -13,7 +13,10 @@
   "scripts": {
     "build:shared": "yarn workspace shared build",
     "dev": "yarn build:shared && lerna run dev --parallel",
-    "start": "lerna run start"
+    "start": "lerna run start",
+    "test": "lerna run test",
+    "test:server": "yarn workspace fullstack-performance-server test",
+    "test:client": "yarn workspace fullstack-performance-client test"
   },
   "devDependencies": {
     "lerna": "~8.2.1"
