@@ -1,4 +1,4 @@
-import { StatusIndicator, Button } from "../../../atoms";
+import { StatusIndicator, Button } from "@components/atoms";
 
 type QueueControlsProps = {
   isConnected: boolean;

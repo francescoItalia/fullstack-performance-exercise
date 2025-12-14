@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { UsersPage, StreamsPage, QueuesPage } from "./components/pages";
-import { ROUTES } from "./routes";
+import { UsersPage, StreamsPage, QueuesPage } from "@components/pages";
+import { ROUTES } from "@/routes";
 
 export default function App() {
   return (

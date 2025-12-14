@@ -1,5 +1,5 @@
 import type { User } from "shared";
-import { Avatar, Text } from "../../../atoms";
+import { Avatar, Text } from "@components/atoms";
 import { HobbiesRow } from "./HobbiesRow";
 
 type UserCardProps = {

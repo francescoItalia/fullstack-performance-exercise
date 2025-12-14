@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { PageTemplate } from "../../templates";
-import { PageTitle, InfoBox } from "../../molecules";
-import { useQueue } from "../../../api/queue";
+import { PageTemplate } from "@components/templates";
+import { PageTitle, InfoBox } from "@components/molecules";
+import { useQueue } from "@api/queue";
 import { QueueControls, JobList } from "./components";
 
 /**

@@ -3,7 +3,7 @@ import type {
   GetUsersMetadataResponse,
   GetUsersParams,
 } from "shared";
-import { apiClient } from "../apiClient";
+import { apiClient } from "@api/apiClient";
 
 export async function fetchUsers(
   params: GetUsersParams

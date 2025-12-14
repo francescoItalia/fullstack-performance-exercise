@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import type { GetUsersParams, GetUsersResponse, User } from "shared";
 import { fetchUsers } from "./users.endpoints";
-import { queryKeys } from "../queryKeys";
+import { queryKeys } from "@api/queryKeys";
 
 type UseUsersQueryParams = Omit<GetUsersParams, "page">;
 

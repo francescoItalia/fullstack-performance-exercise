@@ -1,4 +1,4 @@
-import { Avatar, Text } from "../../../atoms";
+import { Avatar, Text } from "@components/atoms";
 
 type UserNameRowProps = {
   avatar: string;

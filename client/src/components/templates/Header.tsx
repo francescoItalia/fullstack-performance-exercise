@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
-import { NAV_ITEMS, ROUTES } from "../../routes";
-import Logo from "../atoms/Logo";
+import { NAV_ITEMS, ROUTES } from "@/routes";
+import Logo from "@components/atoms/Logo";
 
 type HeaderProps = {
   /** Optional page-specific content (e.g., search box) */

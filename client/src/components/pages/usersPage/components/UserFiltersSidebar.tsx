@@ -1,5 +1,5 @@
-import { useUsersMetadata } from "../../../../api/users";
-import { FilterSection, SearchBox } from "../../../molecules";
+import { useUsersMetadata } from "@api/users";
+import { FilterSection, SearchBox } from "@components/molecules";
 
 type UserFiltersSidebarProps = {
   search: string;

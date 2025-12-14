@@ -1,5 +1,5 @@
-import { useStreamSSE } from "../../../../api/stream";
-import { Button, StatusIndicator } from "../../../atoms";
+import { useStreamSSE } from "@api/stream";
+import { Button, StatusIndicator } from "@components/atoms";
 import { StreamCard } from "./StreamCard";
 
 /**

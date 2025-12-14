@@ -1,5 +1,5 @@
-import { useStreamRaw } from "../../../../api/stream";
-import { Button, StatusIndicator } from "../../../atoms";
+import { useStreamRaw } from "@api/stream";
+import { Button, StatusIndicator } from "@components/atoms";
 import { StreamCard } from "./StreamCard";
 
 /**

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { GetUsersMetadataResponse } from "shared";
 import { fetchUsersMetadata } from "./users.endpoints";
-import { queryKeys } from "../queryKeys";
+import { queryKeys } from "@api/queryKeys";
 
 /** Default selector: returns the raw metadata response */
 const defaultSelectMetadata = (data: GetUsersMetadataResponse) => data;

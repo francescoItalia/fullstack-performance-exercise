@@ -1,5 +1,5 @@
 import type { JobState } from "shared";
-import { StatusIndicator } from "../../../atoms";
+import { StatusIndicator } from "@components/atoms";
 
 type JobItemProps = {
   job: JobState;

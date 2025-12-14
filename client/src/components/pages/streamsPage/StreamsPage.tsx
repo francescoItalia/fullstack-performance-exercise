@@ -1,5 +1,5 @@
-import { PageTemplate } from "../../templates";
-import { PageTitle, InfoBox } from "../../molecules";
+import { PageTemplate } from "@components/templates";
+import { PageTitle, InfoBox } from "@components/molecules";
 import { RawStreamDemo, NDJSONStreamDemo, SSEStreamDemo } from "./components";
 
 /**

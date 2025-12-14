@@ -1,4 +1,4 @@
-import { Input } from "../atoms";
+import { Input } from "@components/atoms";
 
 type SearchBoxProps = {
   value: string;

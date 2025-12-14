@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useUsersQuery } from "../../../api/users";
+import { useUsersQuery } from "@api/users";
 import { UserListVirtual, UserFiltersSidebar } from "./components";
-import { PageWithSidebarTemplate } from "../../templates";
-import { useDebouncedValue } from "../../../hooks";
+import { PageWithSidebarTemplate } from "@components/templates";
+import { useDebouncedValue } from "@hooks/useDebouncedValue";
 
 export function UsersPage() {
   const [search, setSearch] = useState("");

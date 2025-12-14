@@ -1,4 +1,4 @@
-import { Badge } from "../../../atoms";
+import { Badge } from "@components/atoms";
 
 type HobbiesRowProps = {
   hobbies: string[];
