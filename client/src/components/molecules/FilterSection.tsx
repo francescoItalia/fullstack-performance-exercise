@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 type FilterSectionProps = {
   title: string;
   options: string[];
@@ -6,7 +8,7 @@ type FilterSectionProps = {
   direction?: "row" | "column";
 };
 
-export function FilterSection({
+export const FilterSection = memo(function FilterSection({
   title,
   options,
   selected,
@@ -60,4 +62,4 @@ export function FilterSection({
       </div>
     </div>
   );
-}
+});

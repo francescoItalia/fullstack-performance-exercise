@@ -117,11 +117,6 @@ export type SSEEventCallback = (event: ChatStreamEvent) => void;
  * Creates an SSE connection and returns control functions.
  * This is the same protocol ChatGPT uses for streaming responses.
  *
- * SSE uses the browser's native EventSource API which provides:
- * - Automatic reconnection on connection loss
- * - Built-in event type handling via addEventListener
- * - Standard text/event-stream protocol
- *
  * Format from server:
  *   event: message_start
  *   data: {"message_id":"msg_abc","model":"mock-gpt-1"}
@@ -132,7 +127,6 @@ export type SSEEventCallback = (event: ChatStreamEvent) => void;
  *   event: message_complete
  *   data: {"finish_reason":"stop","usage":{"total_tokens":42}}
  *
- * @see https://developer.mozilla.org/en-US/docs/Web/API/EventSource
  */
 export function createSSEStream(
   onEvent: SSEEventCallback,

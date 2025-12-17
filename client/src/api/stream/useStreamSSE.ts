@@ -6,16 +6,6 @@ import type { StreamState, ChatMetadata, ChatUsage } from "shared";
  * Hook for consuming Server-Sent Events (SSE) streaming.
  * This is the same protocol ChatGPT uses for streaming responses.
  *
- * SSE advantages over fetch-based streaming:
- * - Browser handles reconnection automatically
- * - Native EventSource API with typed event listeners
- * - Standard protocol with wide browser support
- *
- * Provides:
- * - Accumulated text content
- * - Message metadata (model, message_id, created_at)
- * - Usage stats after completion (token counts)
- * - Stream state management
  */
 export function useStreamSSE() {
   const [content, setContent] = useState("");

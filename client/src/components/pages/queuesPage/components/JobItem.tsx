@@ -1,5 +1,6 @@
 import type { JobState } from "shared";
 import { StatusIndicator } from "@components/atoms";
+import { memo } from "react";
 
 type JobItemProps = {
   job: JobState;
@@ -15,7 +16,9 @@ const statusBadgeStyles = {
 /**
  * Individual job row with status indicator and details.
  */
-export function JobItem({ job }: JobItemProps) {
+export const JobItem = memo(function JobItem({ job }: JobItemProps) {
+  console.log("JobItem render");
+
   return (
     <div className="px-6 py-4 flex items-start gap-4">
       <div className="flex-shrink-0 mt-1">
@@ -56,4 +59,4 @@ export function JobItem({ job }: JobItemProps) {
       </div>
     </div>
   );
-}
+});

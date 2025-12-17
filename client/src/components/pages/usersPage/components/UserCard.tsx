@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { User } from "shared";
 import { Avatar, Text } from "@components/atoms";
 import { HobbiesRow } from "./HobbiesRow";
@@ -6,7 +7,7 @@ type UserCardProps = {
   user: User;
 };
 
-export function UserCard({ user }: UserCardProps) {
+export const UserCard = memo(function UserCard({ user }: UserCardProps) {
   return (
     <div className="h-full p-4 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex gap-4">
       {/* Avatar - left side */}
@@ -35,4 +36,4 @@ export function UserCard({ user }: UserCardProps) {
       </div>
     </div>
   );
-}
+});
