@@ -5,6 +5,7 @@ import {
   streamChatCompletionSSE,
 } from "./stream.service.js";
 import { delay } from "./stream.utils.js";
+import { once } from "events";
 
 /**
  * Streams text to the client chunk-by-chunk (raw HTTP streaming).
@@ -48,14 +49,36 @@ export async function streamTextNDJSON(
   res.setHeader("Transfer-Encoding", "chunked");
   res.setHeader("Cache-Control", "no-cache");
 
-  // Recommended for proxies (Heroku, Vercel…)
   res.flushHeaders?.();
 
-  for await (const streamEvent of streamChatCompletion()) {
-    res.write(`${JSON.stringify(streamEvent)}\n`);
-  }
+  // Setup AbortController for early cancellation
+  const abortController = new AbortController();
 
-  res.end();
+  // Handle client disconnect
+  res.on("close", () => {
+    abortController.abort();
+  });
+
+  try {
+    for await (const streamEvent of streamChatCompletion(
+      abortController.signal
+    )) {
+      // Check if client disconnected
+      if (abortController.signal.aborted) {
+        break;
+      }
+
+      // Handle backpressure: if write buffer is full, wait for drain
+      if (!res.write(`${JSON.stringify(streamEvent)}\n`)) {
+        await once(res, "drain");
+      }
+    }
+  } finally {
+    // Ensure response is properly closed
+    if (!res.writableEnded) {
+      res.end();
+    }
+  }
 }
 
 /**
@@ -78,7 +101,6 @@ export async function streamTextNDJSON(
  * The `data:` line contains the JSON payload.
  * Events are separated by double newlines.
  *
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events
  */
 export async function streamTextSSE(
   _req: Request,
@@ -88,20 +110,46 @@ export async function streamTextSSE(
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
 
-  // Recommended for proxies (Heroku, Vercel…)
   res.flushHeaders?.();
 
-  for await (const streamEvent of streamChatCompletionSSE()) {
-    // SSE format: event type on its own line, then data
-    res.write(`event: ${streamEvent.type}\n`);
+  // Setup AbortController for early cancellation
+  const abortController = new AbortController();
 
-    // For SSE, we send just the payload without the "type" field
-    // (the type is already in the event: line)
-    const { type, ...payload } = streamEvent;
-    res.write(`data: ${JSON.stringify(payload)}\n\n`);
+  // Handle client disconnect
+  res.on("close", () => {
+    abortController.abort();
+  });
+
+  try {
+    for await (const streamEvent of streamChatCompletionSSE(
+      abortController.signal
+    )) {
+      // Check if client disconnected
+      if (abortController.signal.aborted) {
+        break;
+      }
+
+      // SSE format: event type on its own line, then data
+      // Handle backpressure for event line
+      if (!res.write(`event: ${streamEvent.type}\n`)) {
+        await once(res, "drain");
+      }
+
+      const { type, ...payload } = streamEvent;
+      // Handle backpressure for data line
+      if (!res.write(`data: ${JSON.stringify(payload)}\n\n`)) {
+        await once(res, "drain");
+      }
+    }
+
+    // Only send DONE if not aborted
+    if (!abortController.signal.aborted && !res.write("data: [DONE]\n\n")) {
+      await once(res, "drain");
+    }
+  } finally {
+    // Ensure response is properly closed
+    if (!res.writableEnded) {
+      res.end();
+    }
   }
-
-  // Final done marker (ChatGPT convention)
-  res.write("data: [DONE]\n\n");
-  res.end();
 }

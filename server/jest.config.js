@@ -59,6 +59,6 @@ export default {
   // Force exit after tests complete (don't wait for open handles)
   forceExit: true,
 
-  // Timeout per test (10 seconds should be plenty with mocked delays)
+  // Timeout per test
   testTimeout: 10000,
 };
