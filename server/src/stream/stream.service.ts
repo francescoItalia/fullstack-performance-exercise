@@ -1,26 +1,19 @@
-/**
- * Stream Service - HTTP Streaming Generators
- *
- */
-
 import { faker } from "@faker-js/faker";
-import { delayRandom } from "./stream.utils.js";
+import { delay, delayRandom } from "./stream.utils.js";
 import type { ChatStreamEvent } from "shared";
 
-// ============================================================
-// RAW HTTP CHUNKED STREAMING
-// ============================================================
-
 /**
- * Generate a long text string (simulating heavy content)
+ * Generate text lazily, one character at a time
  */
-export function streamGeneratedText(): string {
-  return faker.lorem.paragraphs(16, "\n\n");
-}
+export async function* streamGeneratedText(signal?: AbortSignal) {
+  const text = faker.lorem.paragraphs(32, "\n\n");
 
-// ============================================================
-// NDJSON STREAMING (Newline Delimited JSON)
-// ============================================================
+  for (const char of text) {
+    if (signal?.aborted) return;
+    yield char;
+    await delay(5);
+  }
+}
 
 /**
  * Simulates a chat completion with structured NDJSON events.
@@ -101,9 +94,6 @@ export async function* streamChatCompletion(
   };
 }
 
-// ============================================================
-// SSE STREAMING (Server-Sent Events)
-// ============================================================
 export async function* streamChatCompletionSSE(
   signal?: AbortSignal
 ): AsyncGenerator<ChatStreamEvent> {

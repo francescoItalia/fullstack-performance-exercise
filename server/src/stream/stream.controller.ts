@@ -4,30 +4,38 @@ import {
   streamChatCompletion,
   streamChatCompletionSSE,
 } from "./stream.service.js";
-import { delay } from "./stream.utils.js";
 import { once } from "events";
+import { pipeline } from "node:stream/promises";
 
 /**
  * Streams text to the client chunk-by-chunk (raw HTTP streaming).
- * Sends one character at a time for full visibility of streaming behavior.
+ * Sends one character at a time.
  */
 export async function streamTextRaw(
   _req: Request,
   res: Response
 ): Promise<void> {
-  const text = streamGeneratedText();
-
   res.setHeader("Content-Type", "text/plain; charset=utf-8");
   res.setHeader("Transfer-Encoding", "chunked");
   res.setHeader("Cache-Control", "no-cache");
 
-  // Stream characters one by one
-  for (const char of text) {
-    res.write(char);
-    await delay(5);
-  }
+  res.flushHeaders?.();
 
-  res.end();
+  const ac = new AbortController();
+  const { signal } = ac;
+
+  res.on("close", () => ac.abort());
+
+  try {
+    await pipeline(streamGeneratedText(signal), res, { signal });
+  } catch (err: any) {
+    if (signal.aborted) return;
+
+    // If error before streaming started, send 500
+    if (!res.headersSent) {
+      res.status(500).end("Internal Server Error");
+    }
+  }
 }
 
 /**
@@ -51,30 +59,23 @@ export async function streamTextNDJSON(
 
   res.flushHeaders?.();
 
-  // Setup AbortController for early cancellation
-  const abortController = new AbortController();
+  const ac = new AbortController();
+  const { signal } = ac;
 
-  // Handle client disconnect
   res.on("close", () => {
-    abortController.abort();
+    ac.abort();
   });
 
   try {
-    for await (const streamEvent of streamChatCompletion(
-      abortController.signal
-    )) {
-      // Check if client disconnected
-      if (abortController.signal.aborted) {
+    for await (const streamEvent of streamChatCompletion(signal)) {
+      if (signal.aborted) {
         break;
       }
-
-      // Handle backpressure: if write buffer is full, wait for drain
       if (!res.write(`${JSON.stringify(streamEvent)}\n`)) {
         await once(res, "drain");
       }
     }
   } finally {
-    // Ensure response is properly closed
     if (!res.writableEnded) {
       res.end();
     }
@@ -112,20 +113,16 @@ export async function streamTextSSE(
 
   res.flushHeaders?.();
 
-  // Setup AbortController for early cancellation
-  const abortController = new AbortController();
+  const ac = new AbortController();
+  const { signal } = ac;
 
-  // Handle client disconnect
   res.on("close", () => {
-    abortController.abort();
+    ac.abort();
   });
 
   try {
-    for await (const streamEvent of streamChatCompletionSSE(
-      abortController.signal
-    )) {
-      // Check if client disconnected
-      if (abortController.signal.aborted) {
+    for await (const streamEvent of streamChatCompletionSSE(signal)) {
+      if (signal.aborted) {
         break;
       }
 
@@ -136,18 +133,15 @@ export async function streamTextSSE(
       }
 
       const { type, ...payload } = streamEvent;
-      // Handle backpressure for data line
       if (!res.write(`data: ${JSON.stringify(payload)}\n\n`)) {
         await once(res, "drain");
       }
     }
 
-    // Only send DONE if not aborted
-    if (!abortController.signal.aborted && !res.write("data: [DONE]\n\n")) {
+    if (!signal.aborted && !res.write("data: [DONE]\n\n")) {
       await once(res, "drain");
     }
   } finally {
-    // Ensure response is properly closed
     if (!res.writableEnded) {
       res.end();
     }
