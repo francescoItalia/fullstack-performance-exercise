@@ -1,4 +1,4 @@
-import { useUsersMetadata } from "@api/users";
+import { useUsersMetadata, USER_QUERY_LIMITS } from "@api/users";
 import { FilterSection, SearchBox } from "@components/molecules";
 import { FILTERS } from "../users.constants";
 
@@ -50,6 +50,7 @@ export function UserFiltersSidebar({
       <SearchBox
         value={search}
         onChange={onSearchChange}
+        maxLength={USER_QUERY_LIMITS.SEARCH_MAX_LENGTH}
         placeholder={FILTERS.SEARCH_PLACEHOLDER}
       />
 

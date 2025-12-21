@@ -32,3 +32,14 @@ export type {
 
 // Common
 export type { PaginatedResponse } from "./common/pagination.js";
+
+// Validation
+export {
+  getUsersQuerySchema,
+  USER_QUERY_LIMITS,
+  validateUserQuery,
+} from "./validation/users.validation.js";
+export type {
+  ValidatedUserQuery,
+  UserQueryValidationResult,
+} from "./validation/users.validation.js";

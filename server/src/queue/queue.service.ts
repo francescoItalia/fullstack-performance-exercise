@@ -1,13 +1,6 @@
 /**
  * Queue Service - Job Processing with Worker Threads
  *
- * Architecture flow:
- * 1. Client POSTs job → Server immediately returns "pending" (202 Accepted)
- * 2. Job is added to in-memory FIFO queue
- * 3. Worker thread processes jobs one at a time (single consumer)
- * 4. When complete, result is broadcast to all WebSocket clients
- *
- * @module queue.service
  */
 
 import { Worker } from "worker_threads";

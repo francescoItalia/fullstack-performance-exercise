@@ -14,7 +14,6 @@ import type { QueueJob, JobResult } from "shared";
 
 // parentPort is how the worker thread communicates with the main thread
 if (!parentPort) {
-  // If parentPort is not available, this script was run as a normal Node process, so throw an error.
   throw new Error("This file must be run as a worker thread");
 }
 

@@ -21,8 +21,7 @@ export function useUsersQuery<TData = User[]>(
 
   const query = useInfiniteQuery({
     queryKey: queryKeys.users.list(params),
-    queryFn: ({ pageParam }) =>
-      fetchUsers({ ...params, page: pageParam, limit: 20 }),
+    queryFn: ({ pageParam }) => fetchUsers({ ...params, page: pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage: GetUsersResponse) =>
       lastPage.hasMore ? lastPage.page + 1 : undefined,

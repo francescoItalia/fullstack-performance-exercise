@@ -11,6 +11,7 @@
 import { describe, it, expect } from "@jest/globals";
 import request from "supertest";
 import app from "../../app";
+import { USER_QUERY_LIMITS } from "shared";
 
 describe("User Routes", () => {
   // ============================================================
@@ -113,11 +114,111 @@ describe("User Routes", () => {
     });
 
     it("returns empty items for non-existent page", async () => {
-      const response = await request(app).get("/api/users?page=9999");
+      const response = await request(app).get("/api/users?page=999");
 
       expect(response.status).toBe(200);
       expect(response.body.items).toHaveLength(0);
       expect(response.body.hasMore).toBe(false);
+    });
+
+    // ============================================================
+    // Validation Tests
+    // ============================================================
+
+    it(`rejects page exceeding max value (${USER_QUERY_LIMITS.PAGE_MAX})`, async () => {
+      const response = await request(app).get(
+        `/api/users?page=${USER_QUERY_LIMITS.PAGE_MAX + 1}`
+      );
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it(`rejects limit exceeding max value (${USER_QUERY_LIMITS.LIMIT_MAX})`, async () => {
+      const response = await request(app).get(
+        `/api/users?limit=${USER_QUERY_LIMITS.LIMIT_MAX + 1}`
+      );
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("rejects negative page value", async () => {
+      const response = await request(app).get("/api/users?page=-1");
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("rejects negative limit value", async () => {
+      const response = await request(app).get("/api/users?limit=-5");
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("rejects zero page value", async () => {
+      const response = await request(app).get("/api/users?page=0");
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("rejects zero limit value", async () => {
+      const response = await request(app).get("/api/users?limit=0");
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it(`rejects search string exceeding max length (${USER_QUERY_LIMITS.SEARCH_MAX_LENGTH})`, async () => {
+      const longSearch = "a".repeat(USER_QUERY_LIMITS.SEARCH_MAX_LENGTH + 1);
+      const response = await request(app).get(
+        `/api/users?search=${longSearch}`
+      );
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it(`accepts search string at max length (${USER_QUERY_LIMITS.SEARCH_MAX_LENGTH})`, async () => {
+      const maxSearch = "a".repeat(USER_QUERY_LIMITS.SEARCH_MAX_LENGTH);
+      const response = await request(app).get(`/api/users?search=${maxSearch}`);
+
+      expect(response.status).toBe(200);
+    });
+
+    it(`rejects too many hobbies (max ${USER_QUERY_LIMITS.ARRAY_MAX_ITEMS})`, async () => {
+      const tooManyHobbies = Array(USER_QUERY_LIMITS.ARRAY_MAX_ITEMS + 1)
+        .fill("coding")
+        .join(",");
+      const response = await request(app).get(
+        `/api/users?hobbies=${tooManyHobbies}`
+      );
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it(`rejects too many nationalities (max ${USER_QUERY_LIMITS.ARRAY_MAX_ITEMS})`, async () => {
+      const tooManyNationalities = Array(USER_QUERY_LIMITS.ARRAY_MAX_ITEMS + 1)
+        .fill("USA")
+        .join(",");
+      const response = await request(app).get(
+        `/api/users?nationalities=${tooManyNationalities}`
+      );
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("error");
+    });
+
+    it("filters out empty items from comma-separated arrays", async () => {
+      // Empty items after split should be filtered out
+      const response = await request(app).get(
+        "/api/users?hobbies=coding,,gaming,"
+      );
+
+      expect(response.status).toBe(200);
     });
   });
 

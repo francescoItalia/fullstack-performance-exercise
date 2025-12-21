@@ -5,13 +5,10 @@ import { initWorker } from "./queue/queue.service.js";
 
 const PORT = 3000;
 
-// Create HTTP server (required for Socket.IO on same port)
 const server = createServer(app);
 
-// Initialize Socket.IO server
 initSocketIO(server);
 
-// Initialize queue worker thread
 initWorker();
 
 server.listen(PORT, () => {

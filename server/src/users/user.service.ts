@@ -6,16 +6,6 @@ import type {
 import * as userDb from "./user.db.js";
 
 /**
- * User Service - Business Logic Layer
- *
- * Responsibilities:
- * - Orchestrate data access through the DB layer
- * - Apply business rules (pagination limits, etc.)
- * - Calculate derived values (hasMore flag)
- *
- */
-
-/**
  * Retrieve paginated list of users with optional filtering.
  *
  * @param params - Query parameters for filtering/pagination
@@ -47,9 +37,6 @@ export function getUsers(params: GetUsersParams): GetUsersResponse {
 
 /**
  * Retrieve metadata for filter UI (top hobbies and nationalities).
- *
- * Returns the 20 most common hobbies and nationalities across all users,
- * sorted by frequency (most common first).
  *
  * @returns Object containing hobbies[] and nationalities[] arrays
  */

@@ -5,10 +5,7 @@ import { enqueueJob, getQueueSize, isWorkerBusy } from "./queue.service.js";
 /**
  * POST /api/queue/submit
  *
- * Submit a job to the processing event-driven single-consumer queue.
- * Server generates the requestId (client sends payload only).
- * Returns immediately with "pending" status (202 Accepted).
- * Result will be delivered via Socket.IO.
+ * Submit a job to the processing queue.
  */
 export function submitJob(req: Request, res: Response): void {
   const { payload } = req.body;
