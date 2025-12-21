@@ -1,10 +1,32 @@
 /**
- * Types for user API endpoints.
- * Shared between server and client.
+ * User-related types shared between server and client.
  */
 
-import type { User } from "../../entities/user.js";
-import type { PaginatedResponse } from "../../common/pagination.js";
+// ============================================================
+// Shared Types
+// ============================================================
+
+export type PaginatedResponse<T> = {
+  items: T[];
+  page: number;
+  limit: number;
+  total: number;
+  hasMore: boolean;
+};
+
+// ============================================================
+// Entity
+// ============================================================
+
+export type User = {
+  id: string;
+  avatar: string;
+  first_name: string;
+  last_name: string;
+  age: number;
+  nationality: string;
+  hobbies: string[];
+};
 
 // ============================================================
 // Request Parameters
@@ -28,4 +50,3 @@ export type GetUsersMetadataResponse = {
   hobbies: string[];
   nationalities: string[];
 };
-
